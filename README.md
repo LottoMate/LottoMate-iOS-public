@@ -27,7 +27,7 @@
 
 
 ## 🗃️ Wiki
-이 프로젝트에 대한 모든 정보를 [여기](https://github.com/LottoMate/LottoMate-iOS/wiki)에서 확인하실 수 있습니다.
+이 프로젝트에 대한 모든 정보를 [여기](https://github.com/LottoMate/LottoMate-iOS-public/wiki)에서 확인하실 수 있습니다.
 
 ## 빌드 전 필수 설정
 이 프로젝트를 로컬에서 빌드하려면 `Config.xcconfig` 파일에 개인 설정값이 필요합니다.
