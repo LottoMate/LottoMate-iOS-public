@@ -1,0 +1,12 @@
+# Ignore Ds_Store
+**/.DS_Store
+
+# Ignore user-specific data in Xcode projects
+**/*.xcuserstate
+**/xcuserdata/
+**/xcdebugger/
+**/IDEFindNavigatorScopes.plist
+**/UserInterfaceState.xcuserstate
+
+# Ignore generated SwiftPM metadata inside workspace
+/LottoMate/LottoMate.xcworkspace/xcshareddata/swiftpm

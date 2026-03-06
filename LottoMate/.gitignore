@@ -1,0 +1,6 @@
+*.xcuserstate
+*.xcconfig
+**/xcuserdata/
+**/xcdebugger/
+**/IDEFindNavigatorScopes.plist
+LottoMate/Resources/GoogleService-Info.plist

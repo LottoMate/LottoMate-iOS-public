@@ -1,0 +1,196 @@
+{
+  "code": "200",
+  "message": "Success",
+  "store_info": [
+    {
+      "name": "행운로또",
+      "phoneNum": "02-1234-5678",
+      "addrLat": "37.5665478",
+      "addrLot": "126.9780456",
+      "address": "서울특별시 종로구 종로 1",
+      "drwtCount": ["5", "2", "1", "0", "0"],
+      "drwtList": [
+        {
+          "type": "L645",
+          "prizeMoney": "1900000000",
+          "lottoRndNum": "965",
+          "drwtDate": "2023-05-15"
+        },
+        {
+          "type": "L720",
+          "prizeMoney": "7000000",
+          "lottoRndNum": "456",
+          "drwtDate": "2023-06-20"
+        }
+      ]
+    },
+    {
+      "name": "대박복권방",
+      "phoneNum": "02-2345-6789",
+      "addrLat": "37.5657123",
+      "addrLot": "126.9769987",
+      "address": "서울특별시 중구 명동길 14",
+      "drwtCount": ["3", "1", "0", "1", "0"],
+      "drwtList": [
+        {
+          "type": "S1000",
+          "prizeMoney": "10000000",
+          "lottoRndNum": "789",
+          "drwtDate": "2023-07-05"
+        }
+      ]
+    },
+    {
+      "name": "황금복권",
+      "phoneNum": "02-3456-7890",
+      "addrLat": "37.5639654",
+      "addrLot": "126.9810321",
+      "address": "서울특별시 용산구 이태원로 123",
+      "drwtCount": ["2", "0", "1", "0", "1"],
+      "drwtList": [
+        {
+          "type": "S2000",
+          "prizeMoney": "20000000",
+          "lottoRndNum": "321",
+          "drwtDate": "2023-08-10"
+        }
+      ]
+    },
+    {
+      "name": "럭키스타",
+      "phoneNum": "02-4567-8901",
+      "addrLat": "37.5172896",
+      "addrLot": "127.0473456",
+      "address": "서울특별시 강남구 테헤란로 152",
+      "drwtCount": ["1", "1", "0", "0", "0"],
+      "drwtList": [
+        {
+          "type": "L645",
+          "prizeMoney": "2100000000",
+          "lottoRndNum": "966",
+          "drwtDate": "2023-05-22"
+        }
+      ]
+    },
+    {
+      "name": "드림로또",
+      "phoneNum": "02-5678-9012",
+      "addrLat": "37.5575789",
+      "addrLot": "126.9245123",
+      "address": "서울특별시 마포구 홍대입구로 10",
+      "drwtCount": ["4", "2", "1", "1", "0"],
+      "drwtList": [
+        {
+          "type": "S500",
+          "prizeMoney": "5000000",
+          "lottoRndNum": "654",
+          "drwtDate": "2023-09-15"
+        },
+        {
+          "type": "L720",
+          "prizeMoney": "7000000",
+          "lottoRndNum": "457",
+          "drwtDate": "2023-10-20"
+        }
+      ]
+    },
+    {
+      "name": "로또명당",
+      "phoneNum": "02-6789-0123",
+      "addrLat": "37.5506432",
+      "addrLot": "126.9910765",
+      "address": "서울특별시 용산구 이태원로 56길 5",
+      "drwtCount": ["6", "3", "2", "0", "1"],
+      "drwtList": [
+        {
+          "type": "L645",
+          "prizeMoney": "1800000000",
+          "lottoRndNum": "967",
+          "drwtDate": "2023-05-29"
+        },
+        {
+          "type": "S2000",
+          "prizeMoney": "20000000",
+          "lottoRndNum": "322",
+          "drwtDate": "2023-11-25"
+        }
+      ]
+    },
+    {
+      "name": "행운의열쇠",
+      "phoneNum": "02-7890-1234",
+      "addrLat": "37.5665987",
+      "addrLot": "127.0093654",
+      "address": "서울특별시 성동구 왕십리로 410",
+      "drwtCount": ["2", "1", "0", "1", "0"],
+      "drwtList": [
+        {
+          "type": "S1000",
+          "prizeMoney": "10000000",
+          "lottoRndNum": "790",
+          "drwtDate": "2023-12-30"
+        }
+      ]
+    },
+    {
+      "name": "로또파워",
+      "phoneNum": "02-8901-2345",
+      "addrLat": "37.5641234",
+      "addrLot": "126.9756789",
+      "address": "서울특별시 중구 을지로 281",
+      "drwtCount": ["3", "2", "1", "0", "0"],
+      "drwtList": [
+        {
+          "type": "L645",
+          "prizeMoney": "2000000000",
+          "lottoRndNum": "968",
+          "drwtDate": "2023-06-05"
+        }
+      ]
+    },
+    {
+      "name": "골든티켓",
+      "phoneNum": "02-9012-3456",
+      "addrLat": "37.5276543",
+      "addrLot": "127.0373210",
+      "address": "서울특별시 강남구 도산대로 102",
+      "drwtCount": ["5", "3", "1", "1", "0"],
+      "drwtList": [
+        {
+          "type": "L720",
+          "prizeMoney": "7000000",
+          "lottoRndNum": "458",
+          "drwtDate": "2024-01-05"
+        },
+        {
+          "type": "S500",
+          "prizeMoney": "5000000",
+          "lottoRndNum": "655",
+          "drwtDate": "2024-02-10"
+        }
+      ]
+    },
+    {
+      "name": "꿈의로또",
+      "phoneNum": "02-0123-4567",
+      "addrLat": "37.5830123",
+      "addrLot": "126.9823456",
+      "address": "서울특별시 서대문구 연세로 50",
+      "drwtCount": ["4", "2", "0", "1", "1"],
+      "drwtList": [
+        {
+          "type": "S2000",
+          "prizeMoney": "20000000",
+          "lottoRndNum": "323",
+          "drwtDate": "2024-03-15"
+        },
+        {
+          "type": "L645",
+          "prizeMoney": "1950000000",
+          "lottoRndNum": "969",
+          "drwtDate": "2024-04-20"
+        }
+      ]
+    }
+  ]
+}

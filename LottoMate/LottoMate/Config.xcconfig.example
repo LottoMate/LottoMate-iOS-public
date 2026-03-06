@@ -1,0 +1,9 @@
+//
+//  Config.xcconfig.example
+//  LottoMate
+//
+//  Copy this file to Config.xcconfig and fill in your own values.
+//
+
+// Naver Maps
+NMF_CLIENT_ID = <YOUR_NMF_CLIENT_ID>

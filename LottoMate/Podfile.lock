@@ -1,0 +1,113 @@
+PODS:
+  - Alamofire (5.9.1)
+  - AppAuth (1.7.5):
+    - AppAuth/Core (= 1.7.5)
+    - AppAuth/ExternalUserAgent (= 1.7.5)
+  - AppAuth/Core (1.7.5)
+  - AppAuth/ExternalUserAgent (1.7.5):
+    - AppAuth/Core
+  - BottomSheet (2.0.4)
+  - FlexLayout (2.0.10)
+  - GoogleSignIn (7.1.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher/Core (3.5.0)
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
+    - Alamofire (~> 5.0)
+  - Moya/RxSwift (15.0.0):
+    - Moya/Core
+    - RxSwift (~> 6.0)
+  - naveridlogin-sdk-ios (4.2.1)
+  - NMapsGeometry (1.0.2)
+  - NMapsMap (3.19.0):
+    - NMapsGeometry
+  - PinLayout (1.10.5)
+  - ReactorKit (3.2.0):
+    - RxSwift (~> 6.0)
+    - WeakMapTable (~> 1.1)
+  - RxCocoa (6.7.1):
+    - RxRelay (= 6.7.1)
+    - RxSwift (= 6.7.1)
+  - RxGesture (4.0.4):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
+  - RxRelay (6.7.1):
+    - RxSwift (= 6.7.1)
+  - RxSwift (6.7.1)
+  - SwiftSoup (2.7.3)
+  - WeakMapTable (1.2.0)
+
+DEPENDENCIES:
+  - BottomSheet (from `https://github.com/joomcode/BottomSheet`)
+  - FlexLayout
+  - GoogleSignIn
+  - Moya
+  - Moya/RxSwift
+  - naveridlogin-sdk-ios
+  - NMapsMap
+  - PinLayout
+  - ReactorKit
+  - RxCocoa
+  - RxGesture
+  - SwiftSoup
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - AppAuth
+    - FlexLayout
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
+    - Moya
+    - naveridlogin-sdk-ios
+    - NMapsGeometry
+    - NMapsMap
+    - PinLayout
+    - ReactorKit
+    - RxCocoa
+    - RxGesture
+    - RxRelay
+    - RxSwift
+    - SwiftSoup
+    - WeakMapTable
+
+EXTERNAL SOURCES:
+  BottomSheet:
+    :git: https://github.com/joomcode/BottomSheet
+
+CHECKOUT OPTIONS:
+  BottomSheet:
+    :commit: 15ab2cf96b757b72b09a6515f667685ff55924e1
+    :git: https://github.com/joomcode/BottomSheet
+
+SPEC CHECKSUMS:
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
+  AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
+  BottomSheet: 45d534f3a5688db757ca7a806837113972225fc2
+  FlexLayout: ea94491c923485f7f28891cb5b10245d22df380b
+  GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
+  GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  naveridlogin-sdk-ios: d5f9d92905a7e964976ebfdd665bee5fb75845c5
+  NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
+  NMapsMap: 99c10429d93340780b6f88d3fc7c0a3850b43664
+  PinLayout: f6c2b63a5a5b24864064e1d15c67de41b4e74748
+  ReactorKit: e8b11d6b9c415405f381669b095c154a05b59eca
+  RxCocoa: f5609cb4637587a7faa99c5d5787e3ad582b75a4
+  RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
+  RxRelay: 4151ba01152436b08271e08410135e099880eae5
+  RxSwift: b9a93a26031785159e11abd40d1a55bcb8057e52
+  SwiftSoup: e3849c3293b1efee9cf892f91f6ae5c22bfeb5f7
+  WeakMapTable: 05c694ce8439a7a9ebabb56187287a63c57673d6
+
+PODFILE CHECKSUM: c9d29d9e4c1138e6a31f2d9585933a01e9fe957b
+
+COCOAPODS: 1.16.2

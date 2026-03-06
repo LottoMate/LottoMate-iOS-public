@@ -1,0 +1,6 @@
+framework module Pods_LottoMateTests {
+  umbrella header "Pods-LottoMateTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
