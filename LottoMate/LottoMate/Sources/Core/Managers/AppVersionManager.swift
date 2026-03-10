@@ -7,12 +7,6 @@
 
 import Foundation
 
-enum UpdateType {
-    case none           // 업데이트 불필요
-    case recommended    // 선택적 업데이트
-    case forced         // 강제 업데이트
-}
-
 class AppVersionManager {
     static let shared = AppVersionManager()
     private init() {}

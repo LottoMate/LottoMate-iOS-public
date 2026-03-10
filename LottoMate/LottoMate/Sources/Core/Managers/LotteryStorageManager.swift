@@ -9,54 +9,6 @@ import Foundation
 import RxSwift
 import RxRelay
 
-enum InputLotteryType: String, CaseIterable, Codable {
-    case lotto = "lotto"
-    case pension = "pension"
-    
-    var displayName: String {
-        switch self {
-        case .lotto:
-            return "로또"
-        case .pension:
-            return "연금복권"
-        }
-    }
-}
-
-struct LotteryEntry: Codable, Identifiable {
-    let id: UUID
-    let type: InputLotteryType
-    let round: Int
-    let drawDate: String
-    let numbers: [Int]
-    let isWinning: Bool
-    let isWinningChecked: Bool
-    let createdAt: Date
-    
-    init(type: InputLotteryType, round: Int, drawDate: String, numbers: [Int]) {
-        self.id = UUID()
-        self.type = type
-        self.round = round
-        self.drawDate = drawDate
-        self.numbers = numbers
-        self.isWinning = false
-        self.isWinningChecked = false
-        self.createdAt = Date()
-    }
-    
-    // 당첨 상태 업데이트를 위한 생성자
-    init(from entry: LotteryEntry, isWinning: Bool, isWinningChecked: Bool) {
-        self.id = entry.id
-        self.type = entry.type
-        self.round = entry.round
-        self.drawDate = entry.drawDate
-        self.numbers = entry.numbers
-        self.isWinning = isWinning
-        self.isWinningChecked = isWinningChecked
-        self.createdAt = entry.createdAt
-    }
-}
-
 class LotteryStorageManager {
     static let shared = LotteryStorageManager()
     
@@ -166,23 +118,5 @@ class LotteryStorageManager {
     func clearAllEntries() throws {
         entriesRelay.accept([])
         try saveEntries()
-    }
-}
-
-// MARK: - Errors
-enum LotteryStorageError: Error, LocalizedError {
-    case entryNotFound
-    case saveError
-    case loadError
-    
-    var errorDescription: String? {
-        switch self {
-        case .entryNotFound:
-            return "해당 복권 번호를 찾을 수 없습니다."
-        case .saveError:
-            return "복권 번호 저장에 실패했습니다."
-        case .loadError:
-            return "복권 번호 불러오기에 실패했습니다."
-        }
     }
 } 
