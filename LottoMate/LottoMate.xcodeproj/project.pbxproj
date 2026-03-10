@@ -494,24 +494,6 @@
 			path = NumberEntry;
 			sourceTree = "<group>";
 		};
-		09341C992C57F60900B47642 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				09341CA52C5B9C3200B47642 /* Subviews */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		09341CA52C5B9C3200B47642 /* Subviews */ = {
-			isa = PBXGroup;
-			children = (
-				095AEB642C94057D00A7DD5A /* PageView */,
-				09341CA82C5BC97800B47642 /* WinningNumberCircleView.swift */,
-				09554D1C2C649740009D1847 /* PrizeInfoCardView.swift */,
-			);
-			path = Subviews;
-			sourceTree = "<group>";
-		};
 		094B0CC42D870BBC00D30174 /* MyAccount */ = {
 			isa = PBXGroup;
 			children = (
@@ -544,15 +526,6 @@
 				094B0CBC2D8080C500D30174 /* SpeetoWinningInfoReactor.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		095AEB642C94057D00A7DD5A /* PageView */ = {
-			isa = PBXGroup;
-			children = (
-				095AEB602C9322F300A7DD5A /* ImagePageViewController.swift */,
-				095AEB672C940A1800A7DD5A /* ImageContentViewController.swift */,
-			);
-			path = PageView;
 			sourceTree = "<group>";
 		};
 		0969664F2C4FE27600BCE28B = {
@@ -686,6 +659,7 @@
 		098A278A2D1D741F000866AE /* WinningReview */ = {
 			isa = PBXGroup;
 			children = (
+				09A3DFBD2F600F6500B74DE2 /* Components */,
 				09C9C3B72D1DC99300403A2E /* WinningReviewDetail */,
 				098A278B2D1D75E7000866AE /* WinningReviewReactor.swift */,
 				095AEB692C94259600A7DD5A /* WinningReviewListView.swift */,
@@ -820,11 +794,11 @@
 		09A3DF9E2F5FEDC900B74DE2 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				09A3DFA02F5FF02F00B74DE2 /* Components */,
 				09A3DFB02F5FFE3400B74DE2 /* BottomSheet */,
 				09A3DFA92F5FF54000B74DE2 /* Web */,
 				09A3DFA72F5FF3EB00B74DE2 /* DesignSystem */,
 				09A3DFA22F5FF07200B74DE2 /* Feedback */,
-				09A3DFA02F5FF02F00B74DE2 /* Components */,
 				09A3DF9F2F5FEFDD00B74DE2 /* Foundation */,
 			);
 			path = UI;
@@ -847,6 +821,7 @@
 				09A3DFA32F5FF0D800B74DE2 /* Images */,
 				09A3DFAF2F5FFD6100B74DE2 /* Scanner */,
 				09A3DFA12F5FF04700B74DE2 /* Labels */,
+				09A3DFBF2F6010AE00B74DE2 /* NumberBall */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -994,6 +969,7 @@
 			children = (
 				09A3DFB22F60008F00B74DE2 /* DrawPicker */,
 				09554D212C64B798009D1847 /* LotteryTypeButtonsView.swift */,
+				09554D1C2C649740009D1847 /* PrizeInfoCardView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1006,6 +982,31 @@
 				096552AE2C8B01C500897DA7 /* DrawRoundBottomSheetViewController.swift */,
 			);
 			path = DrawPicker;
+			sourceTree = "<group>";
+		};
+		09A3DFBC2F600F6500B74DE2 /* PageView */ = {
+			isa = PBXGroup;
+			children = (
+				095AEB602C9322F300A7DD5A /* ImagePageViewController.swift */,
+				095AEB672C940A1800A7DD5A /* ImageContentViewController.swift */,
+			);
+			path = PageView;
+			sourceTree = "<group>";
+		};
+		09A3DFBD2F600F6500B74DE2 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				09A3DFBC2F600F6500B74DE2 /* PageView */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		09A3DFBF2F6010AE00B74DE2 /* NumberBall */ = {
+			isa = PBXGroup;
+			children = (
+				09341CA82C5BC97800B47642 /* WinningNumberCircleView.swift */,
+			);
+			path = NumberBall;
 			sourceTree = "<group>";
 		};
 		09AACCF92CE08ABE000ABCEE /* RandomNumber */ = {
@@ -1097,7 +1098,6 @@
 				09A3DF942F5FE9C200B74DE2 /* Core */,
 				09C337B22D0C03FF00607D1C /* Features */,
 				09A3DFA82F5FF45D00B74DE2 /* DevSupport */,
-				09341C992C57F60900B47642 /* Views */,
 				09554D0F2C5E533D009D1847 /* Models */,
 				098A27872D1B2F67000866AE /* Domain */,
 				098A278D2D1D77E1000866AE /* Data */,
