@@ -24,7 +24,7 @@
 - 업데이트 정책(Local config 기반)
 
 ## 3. UI 컴포넌트
-- [공통 UI 요소](./공통-UI-요소.md)
+- [[공통 UI 요소|공통-UI-요소]]
 - 배너, 토스트, 버튼 등 공통 컴포넌트
 
 ## 4. 화면 구조 및 구현
@@ -46,6 +46,6 @@
 - Mock sampleData 디코딩 테스트
 
 ## 8. 부록
-- 사용 기술: [사용 기술 (Technologies Used)](./사용-기술-(Technologies-Used).md)
-- 문제 해결 기록: [문제 해결 과정](./문제-해결-과정-(Problem‐Solving-Process).md)
-- 리팩토링 기록: [리팩토링 기록](./리팩토링-기록-(Refactoring-Log).md)
+- 사용 기술: [[사용 기술 (Technologies Used)|사용-기술-(Technologies-Used)]]
+- 문제 해결 기록: [[문제 해결 과정|문제-해결-과정-(Problem‐Solving-Process)]]
+- 리팩토링 기록: [[리팩토링 기록|리팩토링-기록-(Refactoring-Log)]]
