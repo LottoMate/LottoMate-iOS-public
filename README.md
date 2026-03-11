@@ -10,16 +10,16 @@
   - 정기적인 회의를 통해 프로젝트의 스케줄을 관리하고, 커뮤니케이션 스킬을 향상시키며 협업 경험을 쌓습니다. 이를 통해 팀원 간의 원활한 협력과 프로젝트의 성공적인 완수를 목표로 합니다.
 
 ## 사용 기술 
-<img src = "https://github.com/user-attachments/assets/4b25c487-30c7-493a-aa96-ce2204ed05d2" width = "100" height = "100"> &nbsp;
-<img src = "https://github.com/user-attachments/assets/ff8fb9ab-6c72-48d2-8bb0-00bbe1fc0e63" width = "89" height = "100"> &nbsp;
-<img src = "https://github.com/user-attachments/assets/4050d23a-87a0-4252-9b9b-22ba311300fa" width = "77" height = "100"> &nbsp;
-<img src = "https://github.com/user-attachments/assets/eb370f91-4da8-4e36-8630-711f0ba4f31b" width = "100" height = "100"> &nbsp;
-<img src = "https://github.com/user-attachments/assets/c11e4f39-8924-4c48-a395-e8a74938ef63" width = "100" height = "100"> &nbsp;
-<img src = "https://github.com/user-attachments/assets/ea33c394-a31b-4753-9e75-037eb0c5b2d4" width = "100" height = "100"> &nbsp;
+<img src="./README/assets/tech-stack/swift.svg" width="100" height="100" alt="Swift"> &nbsp;
+<img src="./README/assets/tech-stack/flexlayout.png" width="89" height="100" alt="FlexLayout"> &nbsp;
+<img src="./README/assets/tech-stack/pinlayout.png" width="77" height="100" alt="PinLayout"> &nbsp;
+<img src="./README/assets/tech-stack/rxswift.png" width="100" height="100" alt="RxSwift"> &nbsp;
+<img src="./README/assets/tech-stack/moya.png" width="100" height="100" alt="Moya"> &nbsp;
+<img src="./README/assets/tech-stack/reactorkit.png" width="100" height="100" alt="ReactorKit"> &nbsp;
 <br>
 
 - Swift(UIKit)
-- FinLayout
+- FlexLayout
 - PinLayout
 - RxSwift
 - Moya
