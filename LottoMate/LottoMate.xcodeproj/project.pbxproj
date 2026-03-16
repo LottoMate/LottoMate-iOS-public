@@ -38,6 +38,7 @@
 		09341CA92C5BC97800B47642 /* WinningNumberCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09341CA82C5BC97800B47642 /* WinningNumberCircleView.swift */; };
 		09341CAB2C5D140800B47642 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09341CAA2C5D140800B47642 /* UIView+Extensions.swift */; };
 		09341CAF2C5E2FE200B47642 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09341CAE2C5E2FE200B47642 /* UIColor+Extensions.swift */; };
+		0937A3D62F67D1C800D2AF21 /* HomeViewReactorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0937A3D52F67D1C800D2AF21 /* HomeViewReactorTests.swift */; };
 		093870682DAE8E240051A7E3 /* SocialLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093870672DAE8E240051A7E3 /* SocialLoginManager.swift */; };
 		0938706A2DAE91960051A7E3 /* PermissionGuideVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093870692DAE91960051A7E3 /* PermissionGuideVC.swift */; };
 		0938706C2DAE92240051A7E3 /* ForcedAppUpdateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0938706B2DAE92240051A7E3 /* ForcedAppUpdateVC.swift */; };
@@ -247,6 +248,7 @@
 		09341CA82C5BC97800B47642 /* WinningNumberCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinningNumberCircleView.swift; sourceTree = "<group>"; };
 		09341CAA2C5D140800B47642 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		09341CAE2C5E2FE200B47642 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		0937A3D52F67D1C800D2AF21 /* HomeViewReactorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewReactorTests.swift; sourceTree = "<group>"; };
 		093870672DAE8E240051A7E3 /* SocialLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginManager.swift; sourceTree = "<group>"; };
 		093870692DAE91960051A7E3 /* PermissionGuideVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGuideVC.swift; sourceTree = "<group>"; };
 		0938706B2DAE92240051A7E3 /* ForcedAppUpdateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForcedAppUpdateVC.swift; sourceTree = "<group>"; };
@@ -560,6 +562,7 @@
 			isa = PBXGroup;
 			children = (
 				096966722C4FE27800BCE28B /* LottoMateTests.swift */,
+				0937A3D52F67D1C800D2AF21 /* HomeViewReactorTests.swift */,
 			);
 			path = LottoMateTests;
 			sourceTree = "<group>";
@@ -1701,6 +1704,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0937A3D62F67D1C800D2AF21 /* HomeViewReactorTests.swift in Sources */,
 				096966732C4FE27800BCE28B /* LottoMateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -433,21 +433,21 @@ final class HomeViewReactor: Reactor {
             newState.lottoRoundResult = result
         
         case .setCurrentLottoRound(let round):
-            newState.isLottoRightArrowIconHidden = currentState.latestLottoRound == round
+            newState.isLottoRightArrowIconHidden = state.latestLottoRound == round
             newState.currentLottoRound = round
         
         case .setPensionRoundResult(let result):
             newState.pensionRoundResult = result
         
         case .setCurrentPensionRound(let round):
-            newState.isPensionRightArrowIconHidden = currentState.latestPensionRound == round
+            newState.isPensionRightArrowIconHidden = state.latestPensionRound == round
             newState.currentPensionLotteryRound = round
             
 //        case .setSpeetoRoundResult(let result):
 //            newState.speetoRoundResult = result
             
         case .setCurrentSpeetoRound(let round):
-            newState.isSpeetoRightArrowIconHidden = currentState.latestSpeetoRound == round
+            newState.isSpeetoRightArrowIconHidden = state.latestSpeetoRound == round
             newState.currentSpeetoRound = round
             
         case .showMap:
