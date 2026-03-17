@@ -109,6 +109,14 @@ class HomeView: UIView, View {
         return view
     }()
     
+    private var allResultViews: [UIView] {
+        [
+            thisWeekLottoResultView,
+            thisWeekPensionLotteryResultView,
+            thisWeekSpeetoResultView
+        ]
+    }
+    
     let showLottoWinningInfoButton: UIView = {
         let view = UIView()
         
@@ -472,6 +480,7 @@ class HomeView: UIView, View {
     private func setupLayout() {
         scrollView.addSubview(rootFlexContainer)
         addSubview(scrollView)
+        setupThisWeekResultContainer()
         
         let cardWidth = (UIScreen.main.bounds.width - 55) / 2
         
@@ -526,6 +535,37 @@ class HomeView: UIView, View {
                 // 푸터
                 flex.addItem(footerView)
             }
+    }
+    
+    private func setupThisWeekResultContainer() {
+        thisWeekResultViewContainer.flex.define { flex in
+            flex.addItem(thisWeekLottoResultView)
+                .grow(1)
+            flex.addItem(thisWeekPensionLotteryResultView)
+                .grow(1)
+                .isIncludedInLayout(false)
+            flex.addItem(thisWeekSpeetoResultView)
+                .grow(1)
+                .isIncludedInLayout(false)
+        }
+        
+        updateThisWeekResultView(for: .lotto)
+    }
+    
+    private func refreshLayout() {
+        setNeedsLayout()
+        layoutIfNeeded()
+    }
+    
+    private func visibleResultView(for type: LotteryType) -> UIView {
+        switch type {
+        case .lotto:
+            return thisWeekLottoResultView
+        case .pensionLottery:
+            return thisWeekPensionLotteryResultView
+        case .speeto:
+            return thisWeekSpeetoResultView
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -664,25 +704,15 @@ extension HomeView {
     }
     
     func updateThisWeekResultView(for type: LotteryType) {
-        thisWeekResultViewContainer.flex.view?.subviews.forEach { $0.removeFromSuperview() }
+        let targetView = visibleResultView(for: type)
         
-        let newView: UIView = {
-            switch type {
-            case .lotto:
-                return thisWeekLottoResultView
-            case .pensionLottery:
-                return thisWeekPensionLotteryResultView
-            case .speeto:
-                return thisWeekSpeetoResultView
-            }
-        }()
-        
-        thisWeekResultViewContainer.flex.define { flex in
-            flex.addItem(newView).grow(1)
+        allResultViews.forEach { resultView in
+            let isVisible = resultView === targetView
+            resultView.isHidden = !isVisible
+            resultView.flex.isIncludedInLayout(isVisible)
         }
         
-        setNeedsLayout()
-        layoutIfNeeded()
+        refreshLayout()
     }
     
     func setUpThisWeekLottoResultView(for result: LottoResultType) {
@@ -805,8 +835,7 @@ extension HomeView {
                 .marginTop(32)
                 .marginHorizontal(20)
         }
-        setNeedsLayout()
-        layoutIfNeeded()
+        refreshLayout()
     }
     
     func setUpThisWeekPensionLotteryView(for result: PensionResultType) {
@@ -953,8 +982,7 @@ extension HomeView {
                 .marginTop(32)
                 .marginHorizontal(20)
         }
-        setNeedsLayout()
-        layoutIfNeeded()
+        refreshLayout()
     }
     
     //    func setUpThisWeekSpeetoResultView(for result: SpeetoResultType) {
