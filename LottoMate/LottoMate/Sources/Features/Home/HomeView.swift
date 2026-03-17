@@ -616,6 +616,86 @@ class HomeView: UIView, View {
         return footerView
     }
     
+    private func makeHighlightedInfoLabel(
+        text: String,
+        highlights: [String],
+        baseStyle: [NSAttributedString.Key: Any] = Typography.label1.attributes(),
+        highlightStyle: [NSAttributedString.Key: Any] = Typography.label2.attributes()
+    ) -> UILabel {
+        let label = UILabel()
+        let attributedString = NSMutableAttributedString(string: text)
+        attributedString.addAttributes(baseStyle, range: NSRange(location: 0, length: text.count))
+        
+        highlights.forEach { highlight in
+            if let range = text.range(of: highlight) {
+                let nsRange = NSRange(range, in: text)
+                attributedString.addAttributes(highlightStyle, range: nsRange)
+            }
+        }
+        
+        label.attributedText = attributedString
+        return label
+    }
+    
+    private func makeLottoWinningNumberBalls(numbers: [Int], bonusNumber: Int) -> UIView {
+        let view = UIView()
+        let plusIcon = CommonImageView(imageName: "plus")
+        
+        view.flex.direction(.row).gap(7).alignItems(.center).define { flex in
+            numbers.forEach { number in
+                let numberBall = WinningNumberCircleView()
+                numberBall.number = number
+                numberBall.circleColor = colorForNumber(number)
+                
+                flex.addItem(numberBall)
+                    .size(28)
+            }
+            
+            let bonusNumberBall = WinningNumberCircleView()
+            bonusNumberBall.number = bonusNumber
+            bonusNumberBall.circleColor = .green50Default
+            
+            flex.addItem(plusIcon)
+                .size(10)
+            flex.addItem(bonusNumberBall)
+                .size(28)
+        }
+        
+        return view
+    }
+    
+    private func makePensionWinningNumberBalls(numbers: [Int]) -> UIView {
+        let view = UIView()
+        
+        view.flex.direction(.row).gap(7).define { flex in
+            numbers.enumerated().forEach { index, number in
+                let numberBall = WinningNumberCircleView()
+                numberBall.number = number
+                numberBall.circleColor = colorForPensionNumber(index: index)
+                
+                if index == 0 {
+                    let groupLabel = UILabel()
+                    groupLabel.text = "조"
+                    styleLabel(for: groupLabel, fontStyle: .caption1, textColor: .black)
+                    
+                    flex.addItem()
+                        .direction(.row)
+                        .gap(7)
+                        .define { flex in
+                            flex.addItem(numberBall)
+                                .size(28)
+                            flex.addItem(groupLabel)
+                        }
+                } else {
+                    flex.addItem(numberBall)
+                        .size(28)
+                }
+            }
+        }
+        
+        return view
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -793,32 +873,10 @@ extension HomeView {
             styleLabel(for: label, fontStyle: .label1, textColor: .black)
             return label
         }()
-        let winningNumberBalls: UIView = {
-            let view = UIView()
-            let winningNumebrs = data.lottoNum
-            let plusIcon = CommonImageView(imageName: "plus")
-            
-            view.flex.direction(.row).gap(7).alignItems(.center).define { flex in
-                winningNumebrs.forEach { number in
-                    let numberBall = WinningNumberCircleView()
-                    let color = colorForNumber(number)
-                    numberBall.number = number
-                    numberBall.circleColor = color
-                    
-                    flex.addItem(numberBall)
-                        .size(28)
-                }
-                let bonusNumberBall = WinningNumberCircleView()
-                bonusNumberBall.number = data.lottoBonusNum.first ?? 0
-                bonusNumberBall.circleColor = .green50Default
-                
-                flex.addItem(plusIcon)
-                    .size(10)
-                flex.addItem(bonusNumberBall)
-                    .size(28)
-            }
-            return view
-        }()
+        let winningNumberBalls = makeLottoWinningNumberBalls(
+            numbers: data.lottoNum,
+            bonusNumber: data.lottoBonusNum.first ?? 0
+        )
         // MARK: Layout Views
         thisWeekLottoResultView.flex.direction(.column).define { flex in
             flex.addItem(mainContainer).direction(.column).define { flex in
@@ -883,62 +941,11 @@ extension HomeView {
             styleLabel(for: label, fontStyle: .title2, textColor: .black)
             return label
         }()
-        let prizeMoneyPerWinnerInfoLabel: UILabel = {
-            let label = UILabel()
-            let fullText = "당첨자는 20년 동안 매월 700만원 씩 받아요"
-            let attributedString = NSMutableAttributedString(string: fullText)
-            
-            let baseAttributes: [NSAttributedString.Key: Any] = Typography.label1.attributes()
-            attributedString.addAttributes(baseAttributes, range: NSRange(location: 0, length: fullText.count))
-            
-            let twentyYears = "20년"
-            if let range = fullText.range(of: twentyYears) {
-                let nsRange = NSRange(range, in: fullText)
-                let highlightAttributes: [NSAttributedString.Key: Any] = Typography.label2.attributes()
-                attributedString.addAttributes(highlightAttributes, range: nsRange)
-            }
-            let prizePerMonth = "매월 700만원"
-            if let range = fullText.range(of: prizePerMonth) {
-                let nsRange = NSRange(range, in: fullText)
-                let highlightAttributes: [NSAttributedString.Key: Any] = Typography.label2.attributes()
-                attributedString.addAttributes(highlightAttributes, range: nsRange)
-            }
-            
-            label.attributedText = attributedString
-            return label
-        }()
-        let winningNumberBalls: UIView = {
-            let view = UIView()
-            let winningNumbers = data.pensionNum
-            
-            view.flex.direction(.row).gap(7).define { flex in
-                winningNumbers.enumerated().forEach { index, number in
-                    let numberBall = WinningNumberCircleView()
-                    let color = colorForPensionNumber(index: index)
-                    numberBall.number = number
-                    numberBall.circleColor = color
-                    
-                    if index == 0 {
-                        let groupLabel: UILabel = {
-                            let label = UILabel()
-                            label.text = "조"
-                            styleLabel(for: label, fontStyle: .caption1, textColor: .black)
-                            return label
-                        }()
-                        
-                        flex.addItem().direction(.row).gap(7).define { flex in
-                            flex.addItem(numberBall)
-                                .size(28)
-                            flex.addItem(groupLabel)
-                        }
-                    } else {
-                        flex.addItem(numberBall)
-                            .size(28)
-                    }
-                }
-            }
-            return view
-        }()
+        let prizeMoneyPerWinnerInfoLabel = makeHighlightedInfoLabel(
+            text: "당첨자는 20년 동안 매월 700만원 씩 받아요",
+            highlights: ["20년", "매월 700만원"]
+        )
+        let winningNumberBalls = makePensionWinningNumberBalls(numbers: data.pensionNum)
         // MARK: Layout Views
         thisWeekPensionLotteryResultView.flex.direction(.column).define { flex in
             flex.addItem(mainContainer).direction(.column).define { flex in
@@ -1005,26 +1012,10 @@ extension HomeView {
             styleLabel(for: label, fontStyle: .title1, textColor: .black)
             return label
         }()
-        let remainingWinningChancesLabel: UILabel = {
-            let label = UILabel()
-            let count = 6 // 동적으로 변하는 값
-            let fullText = "1등 복권 \(count)장 남았어요"
-            let attributedString = NSMutableAttributedString(string: fullText)
-            
-            // 기본 스타일 적용
-            let baseAttributes: [NSAttributedString.Key: Any] = Typography.label1.attributes()
-            attributedString.addAttributes(baseAttributes, range: NSRange(location: 0, length: fullText.count))
-            
-            // 숫자+"장" 부분에 다른 스타일 적용
-            let targetText = "\(count)장"
-            if let range = fullText.range(of: targetText) {
-                let nsRange = NSRange(range, in: fullText)
-                let highlightAttributes: [NSAttributedString.Key: Any] = Typography.label2.attributes()
-                attributedString.addAttributes(highlightAttributes, range: nsRange)
-            }
-            label.attributedText = attributedString
-            return label
-        }()
+        let remainingWinningChancesLabel = makeHighlightedInfoLabel(
+            text: "1등 복권 6장 남았어요",
+            highlights: ["6장"]
+        )
         let lotteryReleaseRate: UILabel = {
             let label = UILabel()
             label.text = "현재까지 출고율"
@@ -1143,8 +1134,7 @@ extension HomeView {
                 .marginHorizontal(20)
         }
         
-        setNeedsLayout()
-        layoutIfNeeded()
+        refreshLayout()
     }
 }
 
