@@ -568,6 +568,54 @@ class HomeView: UIView, View {
         }
     }
     
+    private func makeResultRoundBadge(
+        roundText: String,
+        dateText: String,
+        roundTextColor: UIColor = .gray120,
+        dateTextColor: UIColor = .gray80,
+        axis: Flex.Direction = .row
+    ) -> UIView {
+        let badgeView = UIView()
+        
+        let winningRoundInfoLabel = UILabel()
+        winningRoundInfoLabel.text = roundText
+        styleLabel(for: winningRoundInfoLabel, fontStyle: .label2, textColor: roundTextColor)
+        
+        let roundDateInfoLabel = UILabel()
+        roundDateInfoLabel.text = dateText
+        styleLabel(for: roundDateInfoLabel, fontStyle: .caption1, textColor: dateTextColor)
+        
+        badgeView.flex
+            .direction(axis)
+            .justifyContent(.center)
+            .alignItems(.center)
+            .gap(8)
+            .define { flex in
+                flex.addItem(winningRoundInfoLabel)
+                flex.addItem(roundDateInfoLabel)
+            }
+        
+        return badgeView
+    }
+    
+    private func makeWinningInfoFooter(guideText: String, buttonView: UIView) -> UIView {
+        let footerView = UIView()
+        let prizeDetailGuideLabel = UILabel()
+        prizeDetailGuideLabel.text = guideText
+        styleLabel(for: prizeDetailGuideLabel, fontStyle: .label1, textColor: .black)
+        
+        footerView.flex
+            .direction(.row)
+            .justifyContent(.spaceBetween)
+            .alignItems(.center)
+            .define { flex in
+                flex.addItem(prizeDetailGuideLabel)
+                flex.addItem(buttonView)
+            }
+        
+        return footerView
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -719,22 +767,18 @@ extension HomeView {
         thisWeekLottoResultView.flex.view?.subviews.forEach { $0.removeFromSuperview() }
         
         let data = result
+        let resultRoundBadge = makeResultRoundBadge(
+            roundText: "\(data.drwNum)회 1등 당첨금",
+            dateText: "\(data.drwDate.reformatDate) 추첨"
+        )
+        let winningInfoFooter = makeWinningInfoFooter(
+            guideText: "💸 2등은 당첨금이 얼마일까?",
+            buttonView: showLottoWinningInfoButton
+        )
         
         let mainContainer: UIView = {
             let view = UIView()
             return view
-        }()
-        let winningRoundInfoLabel: UILabel = {
-            let label = UILabel()
-            label.text = "\(data.drwNum)회 1등 당첨금"
-            styleLabel(for: label, fontStyle: .label2, textColor: .gray120)
-            return label
-        }()
-        let roundDateInfoLabel: UILabel = {
-            let label = UILabel()
-            label.text = "\(data.drwDate.reformatDate) 추첨"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray80)
-            return label
         }()
         let prizeMoneyLabel: UILabel = {
             let label = UILabel()
@@ -775,25 +819,10 @@ extension HomeView {
             }
             return view
         }()
-        let prizeDetailGuideLabel: UILabel = {
-            let label = UILabel()
-            label.text = "💸 2등은 당첨금이 얼마일까?"
-            styleLabel(for: label, fontStyle: .label1, textColor: .black)
-            return label
-        }()
-        
         // MARK: Layout Views
         thisWeekLottoResultView.flex.direction(.column).define { flex in
             flex.addItem(mainContainer).direction(.column).define { flex in
-                flex.addItem()
-                    .direction(.row)
-                    .justifyContent(.center)
-                    .alignItems(.center)
-                    .gap(8)
-                    .define { flex in
-                        flex.addItem(winningRoundInfoLabel)
-                        flex.addItem(roundDateInfoLabel)
-                    }
+                flex.addItem(resultRoundBadge)
                     .paddingHorizontal(12)
                     .paddingVertical(4)
                     .backgroundColor(.gray10)
@@ -820,14 +849,7 @@ extension HomeView {
                     .end(13)
                     .marginTop(100)
             }
-            flex.addItem()
-                .direction(.row)
-                .justifyContent(.spaceBetween)
-                .alignItems(.center)
-                .define { flex in
-                    flex.addItem(prizeDetailGuideLabel)
-                    flex.addItem(showLottoWinningInfoButton)
-                }
+            flex.addItem(winningInfoFooter)
                 .paddingVertical(16)
                 .paddingHorizontal(20)
                 .backgroundColor(.gray10)
@@ -842,22 +864,18 @@ extension HomeView {
         thisWeekPensionLotteryResultView.flex.view?.subviews.forEach { $0.removeFromSuperview() }
         
         let data = result
+        let resultRoundBadge = makeResultRoundBadge(
+            roundText: "\(data.pensionDrwNum)회 1등 당첨금",
+            dateText: "\(data.pensionDrwDate.reformatDate) 추첨"
+        )
+        let winningInfoFooter = makeWinningInfoFooter(
+            guideText: "💸 2등은 당첨금이 얼마일까?",
+            buttonView: showPensionWinningInfoButton
+        )
         
         let mainContainer: UIView = {
             let view = UIView()
             return view
-        }()
-        let winningRoundInfoLabel: UILabel = {
-            let label = UILabel()
-            label.text = "\(data.pensionDrwNum)회 1등 당첨금"
-            styleLabel(for: label, fontStyle: .label2, textColor: .gray120)
-            return label
-        }()
-        let roundDateInfoLabel: UILabel = {
-            let label = UILabel()
-            label.text = "\(data.pensionDrwDate.reformatDate) 추첨"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray80)
-            return label
         }()
         let prizeMoneyLabel: UILabel = {
             let label = UILabel()
@@ -921,25 +939,10 @@ extension HomeView {
             }
             return view
         }()
-        let prizeDetailGuideLabel: UILabel = {
-            let label = UILabel()
-            label.text = "💸 2등은 당첨금이 얼마일까?"
-            styleLabel(for: label, fontStyle: .label1, textColor: .black)
-            return label
-        }()
-        
         // MARK: Layout Views
         thisWeekPensionLotteryResultView.flex.direction(.column).define { flex in
             flex.addItem(mainContainer).direction(.column).define { flex in
-                flex.addItem()
-                    .direction(.row)
-                    .justifyContent(.center)
-                    .alignItems(.center)
-                    .gap(8)
-                    .define { flex in
-                        flex.addItem(winningRoundInfoLabel)
-                        flex.addItem(roundDateInfoLabel)
-                    }
+                flex.addItem(resultRoundBadge)
                     .paddingHorizontal(12)
                     .paddingVertical(4)
                     .backgroundColor(.gray10)
@@ -967,14 +970,7 @@ extension HomeView {
                     .end(13)
                     .marginTop(100)
             }
-            flex.addItem()
-                .direction(.row)
-                .justifyContent(.spaceBetween)
-                .alignItems(.center)
-                .define { flex in
-                    flex.addItem(prizeDetailGuideLabel)
-                    flex.addItem(showPensionWinningInfoButton)
-                }
+            flex.addItem(winningInfoFooter)
                 .paddingVertical(16)
                 .paddingHorizontal(20)
                 .backgroundColor(.gray10)
@@ -987,21 +983,21 @@ extension HomeView {
     
     //    func setUpThisWeekSpeetoResultView(for result: SpeetoResultType) {
     func setUpThisWeekSpeetoResultView() {
+        let resultRoundBadge = makeResultRoundBadge(
+            roundText: "54회 1등 당첨금",
+            dateText: "2024.06.29 스피또 2000 기준",
+            roundTextColor: .black,
+            dateTextColor: .gray100,
+            axis: .column
+        )
+        let winningInfoFooter = makeWinningInfoFooter(
+            guideText: "💸 2등은 당첨금이 얼마일까?",
+            buttonView: showSpeetoWinningInfoButton
+        )
+        
         let mainContainer: UIView = {
             let view = UIView()
             return view
-        }()
-        let winningRoundInfoLabel: UILabel = {
-            let label = UILabel()
-            label.text = "54회 1등 당첨금"
-            styleLabel(for: label, fontStyle: .label2, textColor: .black)
-            return label
-        }()
-        let roundDateInfoLabel: UILabel = {
-            let label = UILabel()
-            label.text = "2024.06.29 스피또 2000 기준"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray100)
-            return label
         }()
         let prizeMoneyLabel: UILabel = {
             let label = UILabel()
@@ -1065,12 +1061,6 @@ extension HomeView {
             styleLabel(for: label, fontStyle: .caption1, textColor: .gray80)
             return label
         }()
-        let prizeDetailGuideLabel: UILabel = {
-            let label = UILabel()
-            label.text = "💸 2등은 당첨금이 얼마일까?"
-            styleLabel(for: label, fontStyle: .label1, textColor: .black)
-            return label
-        }()
         let separatorLabel1: UILabel = {
             let label = UILabel()
             label.text = "|"
@@ -1089,14 +1079,7 @@ extension HomeView {
         thisWeekSpeetoResultView.flex.direction(.column).define { flex in
             flex.addItem(mainContainer).direction(.column).define { flex in
                 // 상단 회차 정보
-                flex.addItem()
-                    .direction(.column)
-                    .justifyContent(.center)
-                    .alignItems(.center)
-                    .define { flex in
-                        flex.addItem(winningRoundInfoLabel)
-                        flex.addItem(roundDateInfoLabel)
-                    }
+                flex.addItem(resultRoundBadge)
                     .paddingVertical(8)
                     .paddingHorizontal(20)
                     .backgroundColor(.gray10)
@@ -1151,14 +1134,7 @@ extension HomeView {
             }
             
             // 하단 당첨 정보 버튼
-            flex.addItem()
-                .direction(.row)
-                .justifyContent(.spaceBetween)
-                .alignItems(.center)
-                .define { flex in
-                    flex.addItem(prizeDetailGuideLabel)
-                    flex.addItem(showSpeetoWinningInfoButton)
-                }
+            flex.addItem(winningInfoFooter)
                 .paddingVertical(16)
                 .paddingHorizontal(20)
                 .backgroundColor(.gray10)
