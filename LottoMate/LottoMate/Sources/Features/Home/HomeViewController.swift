@@ -103,6 +103,16 @@ class HomeViewController: BaseViewController {
                 self?.showQrScanner()
             })
             .disposed(by: disposeBag)
+
+        reactor.state
+            .map { $0.isWinningInfoVisible }
+            .distinctUntilChanged()
+            .skip(1)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.showLottoWinningInfoView(type: self.reactor.currentState.selectedLotteryType)
+            })
+            .disposed(by: disposeBag)
         
         // QR 스캔 결과 처리를 위한 구독
         QRScannerManager.shared.scanResult
@@ -503,7 +513,8 @@ class HomeViewController: BaseViewController {
         }
     }
 
-    func showLottoWinningInfoView() {
+    func showLottoWinningInfoView(type: LotteryType) {
+        LottoMateViewModel.shared.selectedLotteryType.onNext(type)
         let viewController = WinningInfoDetailViewController()
 
         if let window = WindowManager.findKeyWindow() {
@@ -761,8 +772,7 @@ extension HomeViewController: BannerNavigationDelegate {
             WebViewController.present(from: self, urlString: urlString, title: "서비스 지역 확대")
 
         case .winningLottoInfo:
-            LottoMateViewModel.shared.selectedLotteryType.onNext(.lotto)
-            showLottoWinningInfoView()
+            showLottoWinningInfoView(type: .lotto)
             
         case .qrCodeScanner:
             if let window = WindowManager.findKeyWindow() {
@@ -805,4 +815,3 @@ extension HomeViewController: BannerNavigationDelegate {
         }
     }
 }
-

@@ -123,6 +123,21 @@ final class HomeViewReactorTests: XCTestCase {
         XCTAssertFalse(hiddenState.isQrScannerVisible)
     }
 
+    // 당첨 정보 상세 표시 플래그가 mutation마다 토글되는지 확인합니다.
+    func testReduce_showWinningInfo_togglesVisibility() {
+        let visibleState = reactor.reduce(
+            state: reactor.initialState,
+            mutation: .showWinningInfo
+        )
+        let hiddenState = reactor.reduce(
+            state: visibleState,
+            mutation: .showWinningInfo
+        )
+
+        XCTAssertTrue(visibleState.isWinningInfoVisible)
+        XCTAssertFalse(hiddenState.isWinningInfoVisible)
+    }
+
     // 당첨 결과 초기화 mutation이 winningResult를 nil로 되돌리는지 확인합니다.
     func testReduce_resetWinningResult_clearsWinningResult() {
         let winningResult = [

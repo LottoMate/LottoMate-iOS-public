@@ -13,7 +13,6 @@ import RxSwift
 import RxGesture
 
 class HomeView: UIView, View {
-    private let viewModel = LottoMateViewModel.shared
     fileprivate let rootFlexContainer = UIView()
     var disposeBag = DisposeBag()
     
@@ -629,26 +628,20 @@ extension HomeView {
         
         showLottoWinningInfoButton.rx.tapGesture()
             .when(.recognized)
-            .subscribe(onNext: { [weak self] _ in
-                self?.viewModel.selectedLotteryType.onNext(.lotto)
-                self?.showLottoWinningInfoView()
-            })
+            .map { _ in HomeViewReactor.Action.showWinningInfo(.lotto) }
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         showPensionWinningInfoButton.rx.tapGesture()
             .when(.recognized)
-            .subscribe(onNext: { [weak self] _ in
-                self?.viewModel.selectedLotteryType.onNext(.pensionLottery)
-                self?.showLottoWinningInfoView()
-            })
+            .map { _ in HomeViewReactor.Action.showWinningInfo(.pensionLottery) }
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         showSpeetoWinningInfoButton.rx.tapGesture()
             .when(.recognized)
-            .subscribe(onNext: { [weak self] _ in
-                self?.viewModel.selectedLotteryType.onNext(.speeto)
-                self?.showLottoWinningInfoView()
-            })
+            .map { _ in HomeViewReactor.Action.showWinningInfo(.speeto) }
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         checkWinningStoreView.rx.tapGesture()
@@ -1152,27 +1145,6 @@ extension HomeView {
 }
 
 extension HomeView {
-    func showLottoWinningInfoView() {
-        let viewController = WinningInfoDetailViewController()
-        
-        if let window = WindowManager.findKeyWindow() {
-            viewController.view.frame = window.bounds
-            if let rootViewController = window.rootViewController {
-                rootViewController.addChild(viewController)
-                rootViewController.view.addSubview(viewController.view)
-                viewController.view.transform = CGAffineTransform(translationX: window.bounds.width, y: 0)
-                UIView.animate(withDuration: 0.3,
-                               delay: 0,
-                               options: [.curveEaseInOut]) {
-                    viewController.view.transform = .identity
-                } completion: { _ in
-                    viewController.didMove(toParent: rootViewController)
-                }
-                viewController.changeStatusBarBgColor(bgColor: .commonNavBar)
-            }
-        }
-    }
-    
     private func showWinningReviewDetail(reviewNo: Int) {
         print("🎯 HomeView: Showing review detail for reviewNo: \(reviewNo)")
         

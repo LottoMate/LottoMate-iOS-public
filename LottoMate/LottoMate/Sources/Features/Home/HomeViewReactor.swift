@@ -26,6 +26,7 @@ final class HomeViewReactor: Reactor {
 //        case fetchSpeetoResult(Int)
         case showMapViewController
         case checkWinningViewTapped
+        case showWinningInfo(LotteryType)
         case fetchLottoResult(Int)
         case fetchPensionLotteryResult(Int)
         case checkWinning(drwNo: Int, numbers: [[Int]])
@@ -51,6 +52,7 @@ final class HomeViewReactor: Reactor {
         case setLotteryTypeDetail(Bool)
         case showMap
         case showQrScanner
+        case showWinningInfo
         case setWinningResult([LottoNumberWithRank])
         case resetWinningResult
         case setSaveLoading(Bool)
@@ -81,6 +83,7 @@ final class HomeViewReactor: Reactor {
         var showLotteryTypeDetail: Bool = false
         var isMapVisible = false
         var isQrScannerVisible = false
+        var isWinningInfoVisible = false
         var winningResult: [LottoNumberWithRank]? = nil
         var saveLoading: Bool = false
         var saveSuccess: Bool = false
@@ -205,6 +208,12 @@ final class HomeViewReactor: Reactor {
         
         case .checkWinningViewTapped:
             return .just(Mutation.showQrScanner)
+
+        case let .showWinningInfo(type):
+            return .concat([
+                .just(.setSelectedLotteryType(type)),
+                .just(.showWinningInfo)
+            ])
         
         case .fetchLottoResult(let round):
             return Observable.concat([
@@ -455,6 +464,9 @@ final class HomeViewReactor: Reactor {
             
         case .showQrScanner:
             newState.isQrScannerVisible.toggle()
+
+        case .showWinningInfo:
+            newState.isWinningInfoVisible.toggle()
             
         case .setWinningResult(let result):
             newState.winningResult = result
