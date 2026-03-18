@@ -59,10 +59,10 @@ class SquereButtonForHome: UIView, View {
                         flex.addItem(pensionLotteryButtonLabel).marginBottom(8)
                         flex.addItem(pensionLotteryBottomBorder).height(2)
                     }
-//                    flex.addItem().direction(.column).define { flex in
-//                        flex.addItem(speetoButtonLabel).marginBottom(8)
-//                        flex.addItem(speetoBottomBorder).height(2)
-//                    }
+                    flex.addItem().direction(.column).define { flex in
+                        flex.addItem(speetoButtonLabel).marginBottom(8)
+                        flex.addItem(speetoBottomBorder).height(2)
+                    }
                 }
                 flex.addItem(informationIcon)
                     .size(22)

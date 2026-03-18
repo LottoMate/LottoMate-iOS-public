@@ -47,6 +47,9 @@ final class HomeViewReactorTests: XCTestCase {
         XCTAssertEqual(newState.currentLottoRound, result.the645.drwNum)
         XCTAssertEqual(newState.latestPensionRound, result.the720.drwNum)
         XCTAssertEqual(newState.currentPensionLotteryRound, result.the720.drwNum)
+        XCTAssertEqual(newState.latestSpeetoRound, HomeSpeetoMockResult.sampleData.first?.speetoDrwNum)
+        XCTAssertEqual(newState.currentSpeetoRound, HomeSpeetoMockResult.sampleData.first?.speetoDrwNum)
+        XCTAssertEqual(newState.speetoRoundResult, HomeSpeetoMockResult.sampleData.first)
     }
 
     // 로또 현재 회차가 최신 회차와 같을 때만 오른쪽 화살표가 숨겨지는지 확인합니다.
@@ -91,6 +94,33 @@ final class HomeViewReactorTests: XCTestCase {
 
         XCTAssertTrue(latestRoundState.isPensionRightArrowIconHidden)
         XCTAssertFalse(previousRoundState.isPensionRightArrowIconHidden)
+    }
+
+    // 스피또 현재 회차가 최신 회차와 같을 때만 오른쪽 화살표가 숨겨지는지 확인합니다.
+    func testReduce_setCurrentSpeetoRound_hidesRightArrowAtLatestRound() throws {
+        let result = try makeLatestLotteryWinningInfoModel()
+        let stateWithLatestRound = reactor.reduce(
+            state: reactor.initialState,
+            mutation: .setLotteryResult(result)
+        )
+
+        guard let latestSpeetoRound = stateWithLatestRound.latestSpeetoRound else {
+            XCTFail("latestSpeetoRound should be initialized with mock data")
+            return
+        }
+
+        let latestRoundState = reactor.reduce(
+            state: stateWithLatestRound,
+            mutation: .setCurrentSpeetoRound(latestSpeetoRound)
+        )
+
+        let previousRoundState = reactor.reduce(
+            state: stateWithLatestRound,
+            mutation: .setCurrentSpeetoRound(latestSpeetoRound - 1)
+        )
+
+        XCTAssertTrue(latestRoundState.isSpeetoRightArrowIconHidden)
+        XCTAssertFalse(previousRoundState.isSpeetoRightArrowIconHidden)
     }
 
     // 지도 이동 플래그가 mutation마다 토글되는지 확인합니다.

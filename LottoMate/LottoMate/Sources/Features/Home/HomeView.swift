@@ -600,8 +600,17 @@ extension HomeView {
             .bind { [weak self] result in
                 self?.setUpThisWeekLottoResultView(for: result)
                 self?.setUpThisWeekPensionLotteryView(for: result)
-                self?.setUpThisWeekSpeetoResultView() // 데이터 연동 후 파라미터 추가 필요
             }
+            .disposed(by: disposeBag)
+
+        reactor.state
+            .map { $0.speetoRoundResult }
+            .distinctUntilChanged()
+            .compactMap { $0 }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] result in
+                self?.setUpThisWeekSpeetoResultView(for: result)
+            })
             .disposed(by: disposeBag)
         
         reactor.state
@@ -663,6 +672,18 @@ extension HomeView {
         pensionRightArrowIcon.rx.tapGesture()
             .when(.recognized)
             .map { _ in HomeViewReactor.Action.fetchNextPensionRound }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+
+        speetoLeftArrowIcon.rx.tapGesture()
+            .when(.recognized)
+            .map { _ in HomeViewReactor.Action.fetchPreviousSpeetoRound }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+
+        speetoRightArrowIcon.rx.tapGesture()
+            .when(.recognized)
+            .map { _ in HomeViewReactor.Action.fetchNextSpeetoRound }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -815,89 +836,18 @@ extension HomeView {
         refreshLayout()
     }
     
-    //    func setUpThisWeekSpeetoResultView(for result: SpeetoResultType) {
-    func setUpThisWeekSpeetoResultView() {
-        let resultRoundBadge = HomeResultViewFactory.makeResultRoundBadge(
-            roundText: "54회 1등 당첨금",
-            dateText: "2024.06.29 스피또 2000 기준",
-            roundTextColor: .black,
-            dateTextColor: .gray100,
-            axis: .column
+    func setUpThisWeekSpeetoResultView(for result: HomeSpeetoMockResult) {
+        let components = HomeSpeetoResultComponentsBuilder.build(
+            result: result,
+            winningInfoButton: showSpeetoWinningInfoButton
         )
-        let winningInfoFooter = HomeResultViewFactory.makeWinningInfoFooter(
-            guideText: "💸 2등은 당첨금이 얼마일까?",
-            buttonView: showSpeetoWinningInfoButton
-        )
-        
-        let mainContainer: UIView = {
-            let view = UIView()
-            return view
-        }()
-        let prizeMoneyLabel: UILabel = {
-            let label = UILabel()
-            label.text = "10억원"
-            styleLabel(for: label, fontStyle: .title1, textColor: .black)
-            return label
-        }()
-        let remainingWinningChancesLabel = HomeResultViewFactory.makeHighlightedInfoLabel(
-            text: "1등 복권 6장 남았어요",
-            highlights: ["6장"]
-        )
-        let lotteryReleaseRate: UILabel = {
-            let label = UILabel()
-            label.text = "현재까지 출고율"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray100)
-            return label
-        }()
-        let realseRate: UILabel = {
-            let label = UILabel()
-            label.text = "72%"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray100)
-            return label
-        }()
-        let firstPrizeRemaining: UILabel = {
-            let label = UILabel()
-            let remainingCount = 0
-            let totalCount = 6
-            label.text = "1등 : \(remainingCount)/\(totalCount)"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray80)
-            return label
-        }()
-        let secondPrizeRemaining: UILabel = {
-            let label = UILabel()
-            let remainingCount = 11
-            let totalCount = 18
-            label.text = "2등 : \(remainingCount)/\(totalCount)"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray80)
-            return label
-        }()
-        let thirdPrizeRemaining: UILabel = {
-            let label = UILabel()
-            let remainingCount = 102
-            let totalCount = 150
-            label.text = "3등 : \(remainingCount)/\(totalCount)"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray80)
-            return label
-        }()
-        let separatorLabel1: UILabel = {
-            let label = UILabel()
-            label.text = "|"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray40)
-            return label
-        }()
-        let separatorLabel2: UILabel = {
-            let label = UILabel()
-            label.text = "|"
-            styleLabel(for: label, fontStyle: .caption1, textColor: .gray40)
-            return label
-        }()
         
         thisWeekSpeetoResultView.flex.view?.subviews.forEach { $0.removeFromSuperview() }
         
         thisWeekSpeetoResultView.flex.direction(.column).define { flex in
-            flex.addItem(mainContainer).direction(.column).define { flex in
+            flex.addItem(components.mainContainer).direction(.column).define { flex in
                 // 상단 회차 정보
-                flex.addItem(resultRoundBadge)
+                flex.addItem(components.resultRoundBadge)
                     .paddingVertical(8)
                     .paddingHorizontal(20)
                     .backgroundColor(.gray10)
@@ -906,35 +856,18 @@ extension HomeView {
                     .alignSelf(.center)
                 
                 // 당첨금과 남은 복권 정보
-                flex.addItem(prizeMoneyLabel)
+                flex.addItem(components.prizeMoneyLabel)
                     .marginTop(12)
                 
                 // 1등 복권 6장 남았어요
-                flex.addItem(remainingWinningChancesLabel)
+                flex.addItem(components.remainingWinningChancesLabel)
                     .marginTop(4)
                 
                 // 출고율 정보 컨테이너
-                flex.addItem()
-                    .direction(.row)
-                    .alignSelf(.center)
-                    .gap(4)
-                    .define { flex in
-                        flex.addItem(lotteryReleaseRate)
-                        flex.addItem(realseRate)
-                    }
+                flex.addItem(components.releaseInfoView)
                 
-                flex.addItem()
-                    .direction(.row)
-                    .gap(8)
-                    .alignSelf(.center)
+                flex.addItem(components.remainingRanksView)
                     .marginTop(12)
-                    .define { flex in
-                        flex.addItem(firstPrizeRemaining)
-                        flex.addItem(separatorLabel1)
-                        flex.addItem(secondPrizeRemaining)
-                        flex.addItem(separatorLabel2)
-                        flex.addItem(thirdPrizeRemaining)
-                    }
                 
                 
                 // 좌우 화살표 아이콘
@@ -952,7 +885,7 @@ extension HomeView {
             }
             
             // 하단 당첨 정보 버튼
-            flex.addItem(winningInfoFooter)
+            flex.addItem(components.winningInfoFooter)
                 .paddingVertical(16)
                 .paddingHorizontal(20)
                 .backgroundColor(.gray10)

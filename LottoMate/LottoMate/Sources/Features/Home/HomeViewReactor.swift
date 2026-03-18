@@ -21,9 +21,9 @@ final class HomeViewReactor: Reactor {
         case fetchNextLottoRound
         case fetchPreviousPensionRound
         case fetchNextPensionRound
-//        case fetchPreviousSpeetoRound
-//        case fetchNextSpeetoRound
-//        case fetchSpeetoResult(Int)
+        case fetchPreviousSpeetoRound
+        case fetchNextSpeetoRound
+        case fetchSpeetoResult(Int)
         case showMapViewController
         case checkWinningViewTapped
         case showWinningInfo(LotteryType)
@@ -47,7 +47,7 @@ final class HomeViewReactor: Reactor {
         case setCurrentPensionRound(Int)
         case setPensionRoundResult(PensionLotteryResultModel)
         case setCurrentSpeetoRound(Int)
-//        case setSpeetoRoundResult(SpeetoResultModel)
+        case setSpeetoRoundResult(HomeSpeetoMockResult)
         case setError(Error)
         case setLotteryTypeDetail(Bool)
         case showMap
@@ -68,7 +68,7 @@ final class HomeViewReactor: Reactor {
         var latestLotteryResult: LatestLotteryWinningInfoModel?
         var lottoRoundResult: LottoResultModel?
         var pensionRoundResult: PensionLotteryResultModel?
-//        var speetoRoundResult: SpeetoResultModel?
+        var speetoRoundResult: HomeSpeetoMockResult?
         var latestLottoRound: Int?
         var latestPensionRound: Int?
         var latestSpeetoRound: Int?
@@ -92,6 +92,7 @@ final class HomeViewReactor: Reactor {
     }
     
     let initialState: State
+    private let mockSpeetoResults = HomeSpeetoMockResult.sampleData
     
     init(initialLotteryType: LotteryType = .lotto) {
         self.initialState = State(selectedLotteryType: initialLotteryType)
@@ -176,32 +177,28 @@ final class HomeViewReactor: Reactor {
                     .catch { .just(.setError($0)) }
             ])
         
-//        case .fetchPreviousSpeetoRound:
-//            guard let currentSpeetoRound = currentState.currentSpeetoRound else { return .empty() }
-//            let previousSpeetoRound = currentSpeetoRound - 1
-//            return Observable.concat([
-//                .just(Mutation.setCurrentSpeetoRound(previousSpeetoRound)),
-//
-//                lottoMateAPIService.getSpeetoResult(round: previousSpeetoRound)
-//                    .map { Mutation.setSpeetoRoundResult($0) }
-//                    .catch { .just(.setError($0)) }
-//            ])
+        case .fetchPreviousSpeetoRound:
+            guard let currentSpeetoRound = currentState.currentSpeetoRound else { return .empty() }
+            let previousSpeetoRound = currentSpeetoRound - 1
+            guard let result = mockSpeetoResult(for: previousSpeetoRound) else { return .empty() }
+            return Observable.concat([
+                .just(Mutation.setCurrentSpeetoRound(previousSpeetoRound)),
+                .just(Mutation.setSpeetoRoundResult(result))
+            ])
             
-//        case .fetchNextSpeetoRound:
-//            guard let currentSpeetoRound = currentState.currentSpeetoRound,
-//                  let maxSpeetoRound = currentState.latestSpeetoRound
-//            else { return .empty() }
-//            guard currentSpeetoRound < maxSpeetoRound else { return .empty() }
-//
-//            let nextSpeetoRound = currentSpeetoRound + 1
-//
-//            return Observable.concat([
-//                .just(Mutation.setCurrentSpeetoRound(nextSpeetoRound)),
-//
-//                lottoMateAPIService.getSpeetoResult(round: nextSpeetoRound)
-//                    .map { Mutation.setSpeetoRoundResult($0) }
-//                    .catch { .just(.setError($0)) }
-//            ])
+        case .fetchNextSpeetoRound:
+            guard let currentSpeetoRound = currentState.currentSpeetoRound,
+                  let maxSpeetoRound = currentState.latestSpeetoRound
+            else { return .empty() }
+            guard currentSpeetoRound < maxSpeetoRound else { return .empty() }
+
+            let nextSpeetoRound = currentSpeetoRound + 1
+            guard let result = mockSpeetoResult(for: nextSpeetoRound) else { return .empty() }
+
+            return Observable.concat([
+                .just(Mutation.setCurrentSpeetoRound(nextSpeetoRound)),
+                .just(Mutation.setSpeetoRoundResult(result))
+            ])
         
         case .showMapViewController:
             return .just(Mutation.showMap)
@@ -237,16 +234,14 @@ final class HomeViewReactor: Reactor {
                 .just(Mutation.setLoading(false))
             ])
 
-//        case .fetchSpeetoResult(let round):
-//            return Observable.concat([
-//                .just(Mutation.setLoading(true)),
-//
-//                lottoMateAPIService.getSpeetoResult(round: round)
-//                    .map { Mutation.setSpeetoRoundResult($0) }
-//                    .catch { .just(.setError($0)) },
-//
-//                .just(Mutation.setLoading(false))
-//            ])
+        case .fetchSpeetoResult(let round):
+            guard let result = mockSpeetoResult(for: round) else { return .empty() }
+            return Observable.concat([
+                .just(Mutation.setLoading(true)),
+                .just(Mutation.setCurrentSpeetoRound(round)),
+                .just(Mutation.setSpeetoRoundResult(result)),
+                .just(Mutation.setLoading(false))
+            ])
 
         case .checkWinning(let drwNo, let numbers):
             return Observable.concat([
@@ -429,8 +424,12 @@ final class HomeViewReactor: Reactor {
             newState.currentLottoRound = result.the645.drwNum
             newState.latestPensionRound = result.the720.drwNum
             newState.currentPensionLotteryRound = result.the720.drwNum
-//            newState.latestSpeetoRound = result.speeto.drwNum
-//            newState.currentSpeetoRound = result.speeto.drwNum
+            if let latestSpeetoResult = mockSpeetoResults.first {
+                newState.latestSpeetoRound = latestSpeetoResult.speetoDrwNum
+                newState.currentSpeetoRound = latestSpeetoResult.speetoDrwNum
+                newState.speetoRoundResult = latestSpeetoResult
+                newState.isSpeetoRightArrowIconHidden = true
+            }
             
         case .setError(let error):
             newState.error = error
@@ -452,8 +451,8 @@ final class HomeViewReactor: Reactor {
             newState.isPensionRightArrowIconHidden = state.latestPensionRound == round
             newState.currentPensionLotteryRound = round
             
-//        case .setSpeetoRoundResult(let result):
-//            newState.speetoRoundResult = result
+        case .setSpeetoRoundResult(let result):
+            newState.speetoRoundResult = result
             
         case .setCurrentSpeetoRound(let round):
             newState.isSpeetoRightArrowIconHidden = state.latestSpeetoRound == round
@@ -497,6 +496,12 @@ final class HomeViewReactor: Reactor {
             newState.isNoticeViewVisible.toggle()
         }
         return newState
+    }
+}
+
+private extension HomeViewReactor {
+    func mockSpeetoResult(for round: Int) -> HomeSpeetoMockResult? {
+        mockSpeetoResults.first { $0.speetoDrwNum == round }
     }
 }
 
@@ -581,4 +586,60 @@ protocol SpeetoResultType {
     var speetoDrwNum: Int { get }
     var speetoDrwDate: String { get }
     var speetoNum: [Int] { get }
+}
+
+struct HomeSpeetoMockResult: Equatable, SpeetoResultType {
+    let speetoDrwNum: Int
+    let speetoDrwDate: String
+    let speetoNum: [Int]
+    let prizeMoneyText: String
+    let releaseRate: Int
+    let firstPrizeRemainingCount: Int
+    let firstPrizeTotalCount: Int
+    let secondPrizeRemainingCount: Int
+    let secondPrizeTotalCount: Int
+    let thirdPrizeRemainingCount: Int
+    let thirdPrizeTotalCount: Int
+
+    static let sampleData: [HomeSpeetoMockResult] = [
+        HomeSpeetoMockResult(
+            speetoDrwNum: 54,
+            speetoDrwDate: "2024.06.29",
+            speetoNum: [],
+            prizeMoneyText: "10억원",
+            releaseRate: 72,
+            firstPrizeRemainingCount: 6,
+            firstPrizeTotalCount: 6,
+            secondPrizeRemainingCount: 11,
+            secondPrizeTotalCount: 18,
+            thirdPrizeRemainingCount: 102,
+            thirdPrizeTotalCount: 150
+        ),
+        HomeSpeetoMockResult(
+            speetoDrwNum: 53,
+            speetoDrwDate: "2024.06.22",
+            speetoNum: [],
+            prizeMoneyText: "10억원",
+            releaseRate: 69,
+            firstPrizeRemainingCount: 4,
+            firstPrizeTotalCount: 6,
+            secondPrizeRemainingCount: 9,
+            secondPrizeTotalCount: 18,
+            thirdPrizeRemainingCount: 96,
+            thirdPrizeTotalCount: 150
+        ),
+        HomeSpeetoMockResult(
+            speetoDrwNum: 52,
+            speetoDrwDate: "2024.06.15",
+            speetoNum: [],
+            prizeMoneyText: "10억원",
+            releaseRate: 66,
+            firstPrizeRemainingCount: 3,
+            firstPrizeTotalCount: 6,
+            secondPrizeRemainingCount: 7,
+            secondPrizeTotalCount: 18,
+            thirdPrizeRemainingCount: 88,
+            thirdPrizeTotalCount: 150
+        )
+    ]
 }
