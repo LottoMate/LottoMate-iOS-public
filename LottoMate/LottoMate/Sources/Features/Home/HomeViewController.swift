@@ -514,6 +514,7 @@ class HomeViewController: BaseViewController {
     }
 
     func showLottoWinningInfoView(type: LotteryType) {
+        syncWinningInfoDetailState(for: type)
         LottoMateViewModel.shared.selectedLotteryType.onNext(type)
         let viewController = WinningInfoDetailViewController()
 
@@ -532,6 +533,49 @@ class HomeViewController: BaseViewController {
                 }
                 viewController.changeStatusBarBgColor(bgColor: .commonNavBar)
             }
+        }
+    }
+
+    private func syncWinningInfoDetailState(for type: LotteryType) {
+        let viewModel = LottoMateViewModel.shared
+        viewModel.latestLotteryResult.accept(reactor.currentState.latestLotteryResult)
+
+        switch type {
+        case .lotto:
+            if let lottoRoundResult = reactor.currentState.lottoRoundResult {
+                viewModel.lottoResult.accept(lottoRoundResult)
+                viewModel.currentLottoRound.accept(lottoRoundResult.lottoResult.drwNum)
+            }
+        case .pensionLottery:
+            if let pensionRoundResult = reactor.currentState.pensionRoundResult {
+                viewModel.pensionLotteryResult.accept(pensionRoundResult)
+                viewModel.currentPensionLotteryRound.accept(pensionRoundResult.pensionLotteryResult.drwNum)
+            } else if let latestResult = reactor.currentState.latestLotteryResult {
+                let fallbackResult = PensionLotteryResultModel(
+                    pensionLotteryResult: PensionLotteryResult(
+                        lottoDrwNo: latestResult.the720.lottoDrwNo,
+                        lottoType: latestResult.the720.lottoType,
+                        lottoNum: latestResult.the720.lottoNum,
+                        lottoBonusNum: latestResult.the720.lottoBonusNum,
+                        drwDate: latestResult.the720.drwDate,
+                        drwNum: latestResult.the720.drwNum,
+                        p1WinnrCnt: latestResult.the720.p1WinnrCnt,
+                        p2WinnrCnt: latestResult.the720.p2WinnrCnt,
+                        p3WinnrCnt: latestResult.the720.p3WinnrCnt,
+                        p4WinnrCnt: latestResult.the720.p4WinnrCnt,
+                        p5WinnrCnt: latestResult.the720.p5WinnrCnt,
+                        p6WinnrCnt: latestResult.the720.p6WinnrCnt,
+                        p7WinnrCnt: latestResult.the720.p7WinnrCnt,
+                        p8WinnrCnt: latestResult.the720.p8WinnrCnt
+                    ),
+                    message: "",
+                    code: 200
+                )
+                viewModel.pensionLotteryResult.accept(fallbackResult)
+                viewModel.currentPensionLotteryRound.accept(fallbackResult.pensionLotteryResult.drwNum)
+            }
+        case .speeto:
+            break
         }
     }
 

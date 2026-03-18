@@ -142,7 +142,7 @@ class PensionLotteryWinningNumbersView: UIView {
         // 조 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                let groupNumber = result?.pensionLotteryResult.lottoNum[0]
+                let groupNumber = result?.pensionLotteryResult.lottoNum[safe: 0]
                 if let number = groupNumber {
                     self.groupNumberBall.number = number
                 }
@@ -151,7 +151,7 @@ class PensionLotteryWinningNumbersView: UIView {
         // 첫번째 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                let firstNumber = result?.pensionLotteryResult.lottoNum[1]
+                let firstNumber = result?.pensionLotteryResult.lottoNum[safe: 1]
                 if let number = firstNumber {
                     self.firstPensionLotteryNumber.number = number
                 }
@@ -160,7 +160,7 @@ class PensionLotteryWinningNumbersView: UIView {
         // 두번째 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                let secondNumber = result?.pensionLotteryResult.lottoNum[2]
+                let secondNumber = result?.pensionLotteryResult.lottoNum[safe: 2]
                 if let number = secondNumber {
                     self.secondPensionLotteryNumber.number = number
                 }
@@ -169,7 +169,7 @@ class PensionLotteryWinningNumbersView: UIView {
         // 세번째 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                let thirdNumber = result?.pensionLotteryResult.lottoNum[3]
+                let thirdNumber = result?.pensionLotteryResult.lottoNum[safe: 3]
                 if let number = thirdNumber {
                     self.thirdPensionLotteryNumber.number = number
                 }
@@ -178,7 +178,7 @@ class PensionLotteryWinningNumbersView: UIView {
         // 네번째 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                let fourthNumber = result?.pensionLotteryResult.lottoNum[4]
+                let fourthNumber = result?.pensionLotteryResult.lottoNum[safe: 4]
                 if let number = fourthNumber {
                     self.fourthPensionLotteryNumber.number = number
                 }
@@ -187,7 +187,7 @@ class PensionLotteryWinningNumbersView: UIView {
         // 다섯번째 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                let fifthNumber = result?.pensionLotteryResult.lottoNum[5]
+                let fifthNumber = result?.pensionLotteryResult.lottoNum[safe: 5]
                 if let number = fifthNumber {
                     self.fifthPensionLotteryNumber.number = number
                 }
@@ -196,7 +196,7 @@ class PensionLotteryWinningNumbersView: UIView {
         // 여섯번째 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                let sixthNumber = result?.pensionLotteryResult.lottoNum[6]
+                let sixthNumber = result?.pensionLotteryResult.lottoNum[safe: 6]
                 if let number = sixthNumber {
                     self.sixthPensionLotteryNumber.number = number
                 }
@@ -205,22 +205,22 @@ class PensionLotteryWinningNumbersView: UIView {
         // 보너스 번호
         viewModel.pensionLotteryResult
             .subscribe(onNext: { result in
-                if let firstBonusNumber = result?.pensionLotteryResult.lottoBonusNum[0] {
+                if let firstBonusNumber = result?.pensionLotteryResult.lottoBonusNum[safe: 0] {
                     self.firstPensionBonusNumber.number = firstBonusNumber
                 }
-                if let secondBonusNumber = result?.pensionLotteryResult.lottoBonusNum[1] {
+                if let secondBonusNumber = result?.pensionLotteryResult.lottoBonusNum[safe: 1] {
                     self.secondPensionBonusNumber.number = secondBonusNumber
                 }
-                if let thirdBonusNumber = result?.pensionLotteryResult.lottoBonusNum[2] {
+                if let thirdBonusNumber = result?.pensionLotteryResult.lottoBonusNum[safe: 2] {
                     self.thirdPensionBonusNumber.number = thirdBonusNumber
                 }
-                if let fourthBonusNumber = result?.pensionLotteryResult.lottoBonusNum[3] {
+                if let fourthBonusNumber = result?.pensionLotteryResult.lottoBonusNum[safe: 3] {
                     self.fourthPensionBonusNumber.number = fourthBonusNumber
                 }
-                if let fifthBonusNumber = result?.pensionLotteryResult.lottoBonusNum[4] {
+                if let fifthBonusNumber = result?.pensionLotteryResult.lottoBonusNum[safe: 4] {
                     self.fifthPensionBonusNumber.number = fifthBonusNumber
                 }
-                if let sixthBonusNumber = result?.pensionLotteryResult.lottoBonusNum[5] {
+                if let sixthBonusNumber = result?.pensionLotteryResult.lottoBonusNum[safe: 5] {
                     self.sixthPensionBonusNumber.number = sixthBonusNumber
                 }
                 
