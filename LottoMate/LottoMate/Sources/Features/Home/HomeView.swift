@@ -768,35 +768,15 @@ extension HomeView {
     func setUpThisWeekPensionLotteryView(for result: PensionResultType) {
         thisWeekPensionLotteryResultView.flex.view?.subviews.forEach { $0.removeFromSuperview() }
         
-        let data = result
-        let resultRoundBadge = HomeResultViewFactory.makeResultRoundBadge(
-            roundText: "\(data.pensionDrwNum)회 1등 당첨금",
-            dateText: "\(data.pensionDrwDate.reformatDate) 추첨"
+        let components = HomePensionResultComponentsBuilder.build(
+            result: result,
+            owner: self,
+            winningInfoButton: showPensionWinningInfoButton
         )
-        let winningInfoFooter = HomeResultViewFactory.makeWinningInfoFooter(
-            guideText: "💸 2등은 당첨금이 얼마일까?",
-            buttonView: showPensionWinningInfoButton
-        )
-        
-        let mainContainer: UIView = {
-            let view = UIView()
-            return view
-        }()
-        let prizeMoneyLabel: UILabel = {
-            let label = UILabel()
-            label.text = "20년 x 월 700만원"
-            styleLabel(for: label, fontStyle: .title2, textColor: .black)
-            return label
-        }()
-        let prizeMoneyPerWinnerInfoLabel = HomeResultViewFactory.makeHighlightedInfoLabel(
-            text: "당첨자는 20년 동안 매월 700만원 씩 받아요",
-            highlights: ["20년", "매월 700만원"]
-        )
-        let winningNumberBalls = HomeResultViewFactory.makePensionWinningNumberBalls(owner: self, numbers: data.pensionNum)
         // MARK: Layout Views
         thisWeekPensionLotteryResultView.flex.direction(.column).define { flex in
-            flex.addItem(mainContainer).direction(.column).define { flex in
-                flex.addItem(resultRoundBadge)
+            flex.addItem(components.mainContainer).direction(.column).define { flex in
+                flex.addItem(components.resultRoundBadge)
                     .paddingHorizontal(12)
                     .paddingVertical(4)
                     .backgroundColor(.gray10)
@@ -804,11 +784,11 @@ extension HomeView {
                     .marginTop(32)
                     .marginHorizontal(81.5)
                 
-                flex.addItem(prizeMoneyLabel)
+                flex.addItem(components.prizeMoneyLabel)
                     .marginTop(12)
-                flex.addItem(prizeMoneyPerWinnerInfoLabel)
+                flex.addItem(components.prizeMoneyPerWinnerInfoLabel)
                     .marginTop(4)
-                flex.addItem(winningNumberBalls)
+                flex.addItem(components.winningNumberBalls)
                     .alignSelf(.center)
                     .marginTop(16)
                 
@@ -824,7 +804,7 @@ extension HomeView {
                     .end(13)
                     .marginTop(100)
             }
-            flex.addItem(winningInfoFooter)
+            flex.addItem(components.winningInfoFooter)
                 .paddingVertical(16)
                 .paddingHorizontal(20)
                 .backgroundColor(.gray10)

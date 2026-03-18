@@ -13,6 +13,7 @@
 		090E8D212D0C357F00C11E63 /* DrawCountDownVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090E8D202D0C357F00C11E63 /* DrawCountDownVIew.swift */; };
 		090E8D272D0C35CF00C11E63 /* HomeLottoResultComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090E8D262D0C35CF00C11E63 /* HomeLottoResultComponents.swift */; };
 		090E8D252D0C35AF00C11E63 /* HomeResultViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090E8D242D0C35AF00C11E63 /* HomeResultViewFactory.swift */; };
+		090E8D292D0C35EF00C11E63 /* HomePensionResultComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090E8D282D0C35EF00C11E63 /* HomePensionResultComponents.swift */; };
 		0912A4E02CCBBE59007C472D /* RandomNumbersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0912A4DF2CCBBE59007C472D /* RandomNumbersView.swift */; };
 		091672BE2C78CC6300959767 /* LottoWinningInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091672BD2C78CC6300959767 /* LottoWinningInfoView.swift */; };
 		091672C02C7B505E00959767 /* LottoPrizeInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091672BF2C7B505E00959767 /* LottoPrizeInfoCardView.swift */; };
@@ -225,6 +226,7 @@
 		090E8D202D0C357F00C11E63 /* DrawCountDownVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawCountDownVIew.swift; sourceTree = "<group>"; };
 		090E8D262D0C35CF00C11E63 /* HomeLottoResultComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeLottoResultComponents.swift; sourceTree = "<group>"; };
 		090E8D242D0C35AF00C11E63 /* HomeResultViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeResultViewFactory.swift; sourceTree = "<group>"; };
+		090E8D282D0C35EF00C11E63 /* HomePensionResultComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePensionResultComponents.swift; sourceTree = "<group>"; };
 		0912A4DF2CCBBE59007C472D /* RandomNumbersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomNumbersView.swift; sourceTree = "<group>"; };
 		091672BD2C78CC6300959767 /* LottoWinningInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottoWinningInfoView.swift; sourceTree = "<group>"; };
 		091672BF2C7B505E00959767 /* LottoPrizeInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottoPrizeInfoCardView.swift; sourceTree = "<group>"; };
@@ -1245,6 +1247,7 @@
 				09B583822CE634340032BB75 /* LotteryTypeInfoViewController.swift */,
 				090E8D202D0C357F00C11E63 /* DrawCountDownVIew.swift */,
 				090E8D262D0C35CF00C11E63 /* HomeLottoResultComponents.swift */,
+				090E8D282D0C35EF00C11E63 /* HomePensionResultComponents.swift */,
 				090E8D242D0C35AF00C11E63 /* HomeResultViewFactory.swift */,
 			);
 			path = SubViews;
@@ -1545,6 +1548,7 @@
 				090E8D212D0C357F00C11E63 /* DrawCountDownVIew.swift in Sources */,
 				090E8D272D0C35CF00C11E63 /* HomeLottoResultComponents.swift in Sources */,
 				090E8D252D0C35AF00C11E63 /* HomeResultViewFactory.swift in Sources */,
+				090E8D292D0C35EF00C11E63 /* HomePensionResultComponents.swift in Sources */,
 				0938706A2DAE91960051A7E3 /* PermissionGuideVC.swift in Sources */,
 				58B19CBA2EA1CA0D00BED5AE /* NativeWinningReviewDetailViewController.swift in Sources */,
 				095AEB6A2C94259600A7DD5A /* WinningReviewListView.swift in Sources */,
