@@ -18,6 +18,7 @@ protocol WinningInfoDetailViewDelegate: AnyObject {
 
 class WinningInfoDetailView: UIView, View {
     let viewModel = LottoMateViewModel.shared
+    private let selectedLotteryTypeRelay = BehaviorRelay<LotteryType>(value: .lotto)
     
     fileprivate let scrollView = UIScrollView()
     fileprivate let rootFlexContainer = UIView()
@@ -32,12 +33,18 @@ class WinningInfoDetailView: UIView, View {
     let speetoWinningInfoView = SpeetoWinningInfoView()
     
     /// 복권 타입 필터 버튼
-    let lotteryTypeButtonsView = LotteryTypeButtonsView()
+    let lotteryTypeButtonsView: LotteryTypeButtonsView
     let contentView = UIView()
     
-    init() {
+    var selectedLotteryType: Observable<LotteryType> {
+        selectedLotteryTypeRelay.asObservable()
+    }
+    
+    init(initialLotteryType: LotteryType) {
+        self.lotteryTypeButtonsView = LotteryTypeButtonsView(selectedLotteryType: selectedLotteryTypeRelay)
         super.init(frame: .zero)
         backgroundColor = .white
+        selectedLotteryTypeRelay.accept(initialLotteryType)
         
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
@@ -54,7 +61,7 @@ class WinningInfoDetailView: UIView, View {
                     .direction(.column)
                     .marginBottom(topMargin + 60)
                     .define { flex in
-                        viewModel.selectedLotteryType
+                        selectedLotteryTypeRelay
                             .subscribe(onNext: { type in
                                 flex.view?.subviews.forEach { $0.removeFromSuperview() }
                                 
@@ -103,6 +110,6 @@ extension WinningInfoDetailView: SpeetoWinningInfoViewDelegate {
 }
 
 #Preview {
-    let view = WinningInfoDetailView()
+    let view = WinningInfoDetailView(initialLotteryType: .lotto)
     return view
 }

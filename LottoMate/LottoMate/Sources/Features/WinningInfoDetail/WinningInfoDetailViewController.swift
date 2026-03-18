@@ -15,6 +15,7 @@ import RxRelay
 import BottomSheet
 
 class WinningInfoDetailViewController: BaseViewController, View {
+    let initialState: WinningInfoDetailState
     
     fileprivate var mainView: WinningInfoDetailView {
         return self.view as! WinningInfoDetailView
@@ -27,12 +28,29 @@ class WinningInfoDetailViewController: BaseViewController, View {
     let reactor = SpeetoWinningInfoReactor()
     
     lazy var winningInfoDetailView: WinningInfoDetailView = {
-        let view = WinningInfoDetailView()
+        let view = WinningInfoDetailView(initialLotteryType: initialState.selectedLotteryType)
         view.bind(reactor: reactor)
         return view
     }()
     
     let speetoPageSelectorVC = SpeetoPageSelectorVC()
+
+    init(initialState: WinningInfoDetailState) {
+        self.initialState = initialState
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    convenience init() {
+        self.init(
+            initialState: WinningInfoDetailState(
+                selectedLotteryType: .lotto
+            )
+        )
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = winningInfoDetailView
@@ -49,12 +67,15 @@ class WinningInfoDetailViewController: BaseViewController, View {
         super.viewDidLoad()
         
         bind(reactor: reactor)
+        applyInitialState()
         setupBindings()
         
-        // !NO_SERVER
-        viewModel.fetchLottoHome()
-        viewModel.lottoDrawRoundPickerViewData()
-        viewModel.pensionLotteryDrawRoundPickerViewData()
+        if viewModel.latestLotteryResult.value == nil {
+            viewModel.fetchLottoHome()
+        } else {
+            viewModel.lottoDrawRoundPickerViewData()
+            viewModel.pensionLotteryDrawRoundPickerViewData()
+        }
         
         let config = NavBarConfiguration(
             style: .backButtonWithTitle,
@@ -70,6 +91,11 @@ class WinningInfoDetailViewController: BaseViewController, View {
     }
     
     func setupBindings() {
+        mainView.selectedLotteryType
+            .distinctUntilChanged()
+            .bind(to: viewModel.selectedLotteryType)
+            .disposed(by: disposeBag)
+
         viewModel.drawRoundTapEvent
             .subscribe(onNext: { isTapped in
                 guard let tapped = isTapped else { return }
@@ -90,14 +116,34 @@ class WinningInfoDetailViewController: BaseViewController, View {
         
         viewModel.latestLotteryResult
             .subscribe(onNext: { result in
+                guard result != nil else { return }
+
+                self.viewModel.lottoDrawRoundPickerViewData()
+                self.viewModel.pensionLotteryDrawRoundPickerViewData()
+
                 if let latestLottoDrawNumber = result?.the645.drwNum {
-                    self.viewModel.fetchLottoResult(round: latestLottoDrawNumber)
+                    let shouldFetchLottoResult = self.viewModel.lottoResult.value == nil
+                    if shouldFetchLottoResult {
+                        self.viewModel.fetchLottoResult(round: latestLottoDrawNumber)
+                    }
                 }
                 if let latestPensionLotteryResult = result?.the720.drwNum {
-                    self.viewModel.fetchPensionLotteryResult(round: latestPensionLotteryResult)
+                    let shouldFetchPensionResult = self.viewModel.pensionLotteryResult.value == nil
+                    if shouldFetchPensionResult {
+                        self.viewModel.fetchPensionLotteryResult(round: latestPensionLotteryResult)
+                    }
                 }
             })
             .disposed(by: disposeBag)
+    }
+
+    private func applyInitialState() {
+        viewModel.selectedLotteryType.onNext(initialState.selectedLotteryType)
+        viewModel.latestLotteryResult.accept(initialState.latestLotteryResult)
+        viewModel.lottoResult.accept(initialState.lottoRoundResult)
+        viewModel.pensionLotteryResult.accept(initialState.pensionRoundResult)
+        viewModel.currentLottoRound.accept(initialState.currentLottoRound)
+        viewModel.currentPensionLotteryRound.accept(initialState.currentPensionLotteryRound)
     }
     
     func showDrawRoundTest() {

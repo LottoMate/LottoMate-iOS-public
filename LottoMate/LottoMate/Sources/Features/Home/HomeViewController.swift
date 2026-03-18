@@ -514,9 +514,9 @@ class HomeViewController: BaseViewController {
     }
 
     func showLottoWinningInfoView(type: LotteryType) {
-        syncWinningInfoDetailState(for: type)
-        LottoMateViewModel.shared.selectedLotteryType.onNext(type)
-        let viewController = WinningInfoDetailViewController()
+        let detailState = makeWinningInfoDetailState(for: type)
+        syncWinningInfoDetailState(for: detailState)
+        let viewController = WinningInfoDetailViewController(initialState: detailState)
 
         if let window = WindowManager.findKeyWindow() {
             viewController.view.frame = window.bounds
@@ -536,22 +536,23 @@ class HomeViewController: BaseViewController {
         }
     }
 
-    private func syncWinningInfoDetailState(for type: LotteryType) {
-        let viewModel = LottoMateViewModel.shared
-        viewModel.latestLotteryResult.accept(reactor.currentState.latestLotteryResult)
-
+    private func makeWinningInfoDetailState(for type: LotteryType) -> WinningInfoDetailState {
         switch type {
         case .lotto:
-            if let lottoRoundResult = reactor.currentState.lottoRoundResult {
-                viewModel.lottoResult.accept(lottoRoundResult)
-                viewModel.currentLottoRound.accept(lottoRoundResult.lottoResult.drwNum)
-            }
+            return WinningInfoDetailState(
+                selectedLotteryType: type,
+                latestLotteryResult: reactor.currentState.latestLotteryResult,
+                lottoRoundResult: reactor.currentState.lottoRoundResult,
+                pensionRoundResult: reactor.currentState.pensionRoundResult,
+                currentLottoRound: reactor.currentState.currentLottoRound,
+                currentPensionLotteryRound: reactor.currentState.currentPensionLotteryRound
+            )
         case .pensionLottery:
-            if let pensionRoundResult = reactor.currentState.pensionRoundResult {
-                viewModel.pensionLotteryResult.accept(pensionRoundResult)
-                viewModel.currentPensionLotteryRound.accept(pensionRoundResult.pensionLotteryResult.drwNum)
+            let pensionRoundResult: PensionLotteryResultModel?
+            if let currentResult = reactor.currentState.pensionRoundResult {
+                pensionRoundResult = currentResult
             } else if let latestResult = reactor.currentState.latestLotteryResult {
-                let fallbackResult = PensionLotteryResultModel(
+                pensionRoundResult = PensionLotteryResultModel(
                     pensionLotteryResult: PensionLotteryResult(
                         lottoDrwNo: latestResult.the720.lottoDrwNo,
                         lottoType: latestResult.the720.lottoType,
@@ -571,12 +572,38 @@ class HomeViewController: BaseViewController {
                     message: "",
                     code: 200
                 )
-                viewModel.pensionLotteryResult.accept(fallbackResult)
-                viewModel.currentPensionLotteryRound.accept(fallbackResult.pensionLotteryResult.drwNum)
+            } else {
+                pensionRoundResult = nil
             }
+
+            return WinningInfoDetailState(
+                selectedLotteryType: type,
+                latestLotteryResult: reactor.currentState.latestLotteryResult,
+                lottoRoundResult: reactor.currentState.lottoRoundResult,
+                pensionRoundResult: pensionRoundResult,
+                currentLottoRound: reactor.currentState.currentLottoRound,
+                currentPensionLotteryRound: pensionRoundResult?.pensionLotteryResult.drwNum ?? reactor.currentState.currentPensionLotteryRound
+            )
         case .speeto:
-            break
+            return WinningInfoDetailState(
+                selectedLotteryType: type,
+                latestLotteryResult: reactor.currentState.latestLotteryResult,
+                lottoRoundResult: reactor.currentState.lottoRoundResult,
+                pensionRoundResult: reactor.currentState.pensionRoundResult,
+                currentLottoRound: reactor.currentState.currentLottoRound,
+                currentPensionLotteryRound: reactor.currentState.currentPensionLotteryRound
+            )
         }
+    }
+
+    private func syncWinningInfoDetailState(for detailState: WinningInfoDetailState) {
+        let viewModel = LottoMateViewModel.shared
+        viewModel.selectedLotteryType.onNext(detailState.selectedLotteryType)
+        viewModel.latestLotteryResult.accept(detailState.latestLotteryResult)
+        viewModel.lottoResult.accept(detailState.lottoRoundResult)
+        viewModel.pensionLotteryResult.accept(detailState.pensionRoundResult)
+        viewModel.currentLottoRound.accept(detailState.currentLottoRound)
+        viewModel.currentPensionLotteryRound.accept(detailState.currentPensionLotteryRound)
     }
 
     // 로딩뷰를 표시하고 당첨 확인 과정을 처리하는 메서드

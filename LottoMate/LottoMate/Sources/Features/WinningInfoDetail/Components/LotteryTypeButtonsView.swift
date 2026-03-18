@@ -13,8 +13,7 @@ import RxCocoa
 
 class LotteryTypeButtonsView: UIView {
     fileprivate let rootFlexContainer = UIView()
-    
-    let viewModel = LottoMateViewModel.shared
+    private let selectedLotteryType: BehaviorRelay<LotteryType>
     
     var lottoTypeButton = StyledButton(
         title: "로또",
@@ -40,7 +39,8 @@ class LotteryTypeButtonsView: UIView {
     
     private let disposeBag = DisposeBag()
     
-    init() {
+    init(selectedLotteryType: BehaviorRelay<LotteryType>) {
+        self.selectedLotteryType = selectedLotteryType
         super.init(frame: .zero)
         
         setupBindings()
@@ -48,7 +48,7 @@ class LotteryTypeButtonsView: UIView {
         rootFlexContainer.flex.direction(.row).define { flex in
             flex.addItem(lottoTypeButton).marginRight(10)
             flex.addItem(pensionLotteryTypeButton).marginRight(10)
-//            flex.addItem(speetoTypeButton)
+            flex.addItem(speetoTypeButton)
         }
         addSubview(rootFlexContainer)
     }
@@ -71,10 +71,10 @@ class LotteryTypeButtonsView: UIView {
         Observable.merge(lottoButtonTap.map { LotteryType.lotto },
                          pensionButtonTap.map { LotteryType.pensionLottery },
                          speetoButtonTap.map { LotteryType.speeto })
-        .bind(to: viewModel.selectedLotteryType)
+        .bind(to: selectedLotteryType)
         .disposed(by: disposeBag)
         
-        viewModel.selectedLotteryType
+        selectedLotteryType
             .subscribe(onNext: { [weak self] lotteryType in
                 self?.updateButtonStyles(for: lotteryType)
             })
@@ -89,6 +89,6 @@ class LotteryTypeButtonsView: UIView {
 }
 
 #Preview {
-    let view = LotteryTypeButtonsView()
+    let view = LotteryTypeButtonsView(selectedLotteryType: BehaviorRelay(value: .lotto))
     return view
 }

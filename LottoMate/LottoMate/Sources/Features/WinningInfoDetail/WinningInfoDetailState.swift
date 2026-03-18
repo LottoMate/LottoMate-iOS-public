@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WinningInfoDetailState: Equatable {
+struct WinningInfoDetailState {
     var selectedLotteryType: LotteryType
     var latestLotteryResult: LatestLotteryWinningInfoModel?
     var lottoRoundResult: LottoResultModel?
