@@ -18,7 +18,7 @@ protocol WinningInfoDetailViewDelegate: AnyObject {
 
 class WinningInfoDetailView: UIView, View {
     let viewModel = LottoMateViewModel.shared
-    private let selectedLotteryTypeRelay = BehaviorRelay<LotteryType>(value: .lotto)
+    private let lotteryTypeRelay = BehaviorRelay<LotteryType>(value: .lotto)
     
     fileprivate let scrollView = UIScrollView()
     fileprivate let rootFlexContainer = UIView()
@@ -37,14 +37,18 @@ class WinningInfoDetailView: UIView, View {
     let contentView = UIView()
     
     var selectedLotteryType: Observable<LotteryType> {
-        selectedLotteryTypeRelay.asObservable()
+        lotteryTypeRelay.asObservable()
+    }
+    
+    var selectedLotteryTypeRelay: BehaviorRelay<LotteryType> {
+        lotteryTypeRelay
     }
     
     init(initialLotteryType: LotteryType) {
-        self.lotteryTypeButtonsView = LotteryTypeButtonsView(selectedLotteryType: selectedLotteryTypeRelay)
+        self.lotteryTypeButtonsView = LotteryTypeButtonsView(selectedLotteryType: lotteryTypeRelay)
         super.init(frame: .zero)
         backgroundColor = .white
-        selectedLotteryTypeRelay.accept(initialLotteryType)
+        lotteryTypeRelay.accept(initialLotteryType)
         
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
@@ -61,7 +65,7 @@ class WinningInfoDetailView: UIView, View {
                     .direction(.column)
                     .marginBottom(topMargin + 60)
                     .define { flex in
-                        selectedLotteryTypeRelay
+                        lotteryTypeRelay
                             .subscribe(onNext: { type in
                                 flex.view?.subviews.forEach { $0.removeFromSuperview() }
                                 

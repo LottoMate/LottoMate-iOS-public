@@ -147,7 +147,7 @@ class WinningInfoDetailViewController: BaseViewController, View {
     }
     
     func showDrawRoundTest() {
-        let viewController = DrawPickerViewController()
+        let viewController = DrawPickerViewController(selectedLotteryType: mainView.selectedLotteryTypeRelay)
         viewController.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width / 1.25)
         
         presentBottomSheet(viewController: viewController, configuration: BottomSheetConfiguration(

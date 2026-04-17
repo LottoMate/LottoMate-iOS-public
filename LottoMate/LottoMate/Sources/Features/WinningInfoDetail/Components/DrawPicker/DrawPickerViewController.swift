@@ -9,10 +9,12 @@ import UIKit
 import PinLayout
 import FlexLayout
 import RxSwift
+import RxRelay
 import RxGesture
 
 class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     private let viewModel = LottoMateViewModel.shared
+    private let selectedLotteryType: BehaviorRelay<LotteryType>
     fileprivate let rootFlexContainer = UIView()
     private let disposeBag = DisposeBag()
     
@@ -21,10 +23,19 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
     private let cancelButton = StyledButton(title: "취소", buttonStyle: .assistive(.large, .active), cornerRadius: 8, verticalPadding: 12, horizontalPadding: 0)
     private let confirmButton = StyledButton(title: "확인", buttonStyle: .solid(.large, .active), cornerRadius: 8, verticalPadding: 12, horizontalPadding: 0)
     
+    init(selectedLotteryType: BehaviorRelay<LotteryType>) {
+        self.selectedLotteryType = selectedLotteryType
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 원하는 row (예: 1133회차의 row)를 선택 상태로 설정
-        viewModel.selectedLotteryType
+        selectedLotteryType
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
                 switch type {
@@ -60,7 +71,7 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
         rootFlexContainer.clipsToBounds = true
         rootFlexContainer.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         
-        viewModel.selectedLotteryType
+        selectedLotteryType
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
                 switch type {
@@ -121,72 +132,39 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        
-        var count: Int?
-        
-        viewModel.selectedLotteryType
-            .subscribe(onNext: { [weak self] type in
-                switch type {
-                case .lotto:
-                    do {
-                        if let data = try self?.viewModel.lottoDrawRoundData.value() {
-                            count = data.count
-                        } else {
-                            count = 0
-                        }
-                    } catch {
-                        print("Error fetching data: \(error)")
-                        count = 0
-                    }
-                case .pensionLottery:
-                    do {
-                        if let data = try self?.viewModel.pensionLotteryDrawRoundData.value() {
-                            count = data.count
-                        } else {
-                            count = 0
-                        }
-                    } catch {
-                        print("Error fetching data: \(error)")
-                        count = 0
-                    }
-                case .speeto:
-                    count = 0
-                }
-            })
-            .disposed(by: disposeBag)
-        
-        return count ?? 0
+        switch selectedLotteryType.value {
+        case .lotto:
+            return (try? viewModel.lottoDrawRoundData.value().count) ?? 0
+        case .pensionLottery:
+            return (try? viewModel.pensionLotteryDrawRoundData.value().count) ?? 0
+        case .speeto:
+            return 0
+        }
     }
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let type = selectedLotteryType.value
+        let data: [(Int, String)]?
         
-        var data: [(Int, String)]?
-        
-        viewModel.selectedLotteryType
-            .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
-                switch type {
-                case .lotto:
-                    data = try? self.viewModel.lottoDrawRoundData.value()
-                case .pensionLottery:
-                    data = try? self.viewModel.pensionLotteryDrawRoundData.value()
-                case .speeto:
-                    break
-                }
-            })
-            .disposed(by: disposeBag)
+        switch type {
+        case .lotto:
+            data = try? viewModel.lottoDrawRoundData.value()
+        case .pensionLottery:
+            data = try? viewModel.pensionLotteryDrawRoundData.value()
+        case .speeto:
+            data = nil
+        }
         
         guard let data else { return }
         
         confirmButton.rx.tapGesture()
             .when(.recognized)
-            .withLatestFrom(viewModel.selectedLotteryType) // tap 시점에 최신 로터리 타입을 가져옴
-            .subscribe(onNext: { [weak self] type in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 let selectedRound = data[row].0
                 
-                switch type {
+                switch self.selectedLotteryType.value {
                 case .lotto:
                     self.viewModel.fetchLottoResult(round: selectedRound)
                     self.viewModel.currentLottoRound.accept(selectedRound)
@@ -203,18 +181,14 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
         
         // 마지막 아이템 도달 시 회차를 추가로 가져옴
         if row == data.count - 1 {
-            viewModel.selectedLotteryType
-                .subscribe(onNext: { [weak self] type in
-                    switch type {
-                    case .lotto:
-                        self?.viewModel.loadMoreLottoDrawRounds()
-                    case .pensionLottery:
-                        self?.viewModel.loadMorePensionLotteryDrawRounds()
-                    case .speeto:
-                        break
-                    }
-                })
-                .disposed(by: disposeBag)
+            switch selectedLotteryType.value {
+            case .lotto:
+                viewModel.loadMoreLottoDrawRounds()
+            case .pensionLottery:
+                viewModel.loadMorePensionLotteryDrawRounds()
+            case .speeto:
+                break
+            }
         }
     }
     
@@ -225,25 +199,19 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         /// 회차 & 날짜 컨테이너
         let containerView = UIView()
-        var data: [(Int, String)]?
+        let data: [(Int, String)]?
         
         let drawRoundLabel = UILabel()
         let drawDateLabel = UILabel()
-        
-        viewModel.selectedLotteryType
-            .subscribe(onNext: { [weak self] type in
-                guard let self = self else { return }
-                switch type {
-                case .lotto:
-                    data = try? self.viewModel.lottoDrawRoundData.value()
-                case .pensionLottery:
-                    data = try? self.viewModel.pensionLotteryDrawRoundData.value()
-                case .speeto:
-                    // 샘플 데이터
-                    data = [(1, ""), (2, ""), (3, ""), (4, ""), (5, ""), (6, ""), (7, ""), (8, "")]
-                }
-            })
-            .disposed(by: disposeBag)
+
+        switch selectedLotteryType.value {
+        case .lotto:
+            data = try? viewModel.lottoDrawRoundData.value()
+        case .pensionLottery:
+            data = try? viewModel.pensionLotteryDrawRoundData.value()
+        case .speeto:
+            data = [(1, ""), (2, ""), (3, ""), (4, ""), (5, ""), (6, ""), (7, ""), (8, "")]
+        }
         
         if let drawInfo = data?[row] {
             let roundText = "\(drawInfo.0)회"
@@ -290,5 +258,5 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
 }
 
 #Preview {
-    DrawPickerViewController()
+    DrawPickerViewController(selectedLotteryType: BehaviorRelay(value: .lotto))
 }
