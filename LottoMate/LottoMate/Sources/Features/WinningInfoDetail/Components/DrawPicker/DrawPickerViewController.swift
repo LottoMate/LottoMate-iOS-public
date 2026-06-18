@@ -132,31 +132,15 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch selectedLotteryType.value {
-        case .lotto:
-            return (try? viewModel.lottoDrawRoundData.value().count) ?? 0
-        case .pensionLottery:
-            return (try? viewModel.pensionLotteryDrawRoundData.value().count) ?? 0
-        case .speeto:
-            return 0
-        }
+        return drawRoundData(for: selectedLotteryType.value).count
     }
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let type = selectedLotteryType.value
-        let data: [(Int, String)]?
+        let data = drawRoundData(for: type)
         
-        switch type {
-        case .lotto:
-            data = try? viewModel.lottoDrawRoundData.value()
-        case .pensionLottery:
-            data = try? viewModel.pensionLotteryDrawRoundData.value()
-        case .speeto:
-            data = nil
-        }
-        
-        guard let data else { return }
+        guard data.indices.contains(row) else { return }
         
         confirmButton.rx.tapGesture()
             .when(.recognized)
@@ -199,21 +183,13 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         /// 회차 & 날짜 컨테이너
         let containerView = UIView()
-        let data: [(Int, String)]?
+        let data = drawRoundData(for: selectedLotteryType.value)
         
         let drawRoundLabel = UILabel()
         let drawDateLabel = UILabel()
 
-        switch selectedLotteryType.value {
-        case .lotto:
-            data = try? viewModel.lottoDrawRoundData.value()
-        case .pensionLottery:
-            data = try? viewModel.pensionLotteryDrawRoundData.value()
-        case .speeto:
-            data = [(1, ""), (2, ""), (3, ""), (4, ""), (5, ""), (6, ""), (7, ""), (8, "")]
-        }
-        
-        if let drawInfo = data?[row] {
+        if data.indices.contains(row) {
+            let drawInfo = data[row]
             let roundText = "\(drawInfo.0)회"
             drawRoundLabel.text = roundText
             drawRoundLabel.font = Typography.font(.headline1)()
@@ -243,6 +219,22 @@ class DrawPickerViewController: UIViewController, UIPickerViewDelegate, UIPicker
         }
         
         return containerView
+    }
+    
+    private func drawRoundData(for type: LotteryType) -> [(Int, String)] {
+        do {
+            switch type {
+            case .lotto:
+                return try viewModel.lottoDrawRoundData.value() ?? []
+            case .pensionLottery:
+                return try viewModel.pensionLotteryDrawRoundData.value() ?? []
+            case .speeto:
+                return []
+            }
+        } catch {
+            print("Error getting draw round data: \(error)")
+            return []
+        }
     }
     
     func rowForDraw(round: Int, from data: [(Int, String)]) -> Int? {
