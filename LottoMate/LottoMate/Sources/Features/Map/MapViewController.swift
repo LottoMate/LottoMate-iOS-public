@@ -304,9 +304,9 @@ class MapViewController: UIViewController, View, CLLocationManagerDelegate {
         
 //        showSeoulBoundary()
         
-        reactor.action.onNext(.fetchInitialMapData(size: 20, boundary: getCurrentMapBoundary()))
-        reactor.action.onNext(.getCurrentLocation)
         bind(reactor: reactor)
+        reactor.action.onNext(.getCurrentLocation)
+        reactor.action.onNext(.fetchInitialMapData(size: 20, boundary: getCurrentMapBoundary()))
         
         addChild(bottomSheet)
         view.addSubview(bottomSheet.view)
@@ -1129,4 +1129,3 @@ extension MapViewController: NMFMapViewCameraDelegate {
         }
     }
 }
-

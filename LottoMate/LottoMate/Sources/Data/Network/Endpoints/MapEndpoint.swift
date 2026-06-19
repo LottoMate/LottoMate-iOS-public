@@ -185,97 +185,159 @@ extension MapEndpoint: TargetType {
     
     var sampleData: Data {
         switch self {
-        case .getStore:
-            return Data(
-                """
-                {
-                  "message":"Success",
-                  "code":200,
-                  "store_info":{
-                    "pageNum":1,
-                    "pageSize":1,
-                    "totalPages":1,
-                    "totalElements":1,
-                    "content":[
-                      {
-                        "storeNo":1001,
-                        "storeNm":"행운복권방",
-                        "storeTel":"02-111-2222",
-                        "storeAddr":"서울 강남구 테헤란로 100",
-                        "addrLot":127.0276,
-                        "addrLat":37.4979,
-                        "lottoTypeList":["L645","L720","S2000"],
-                        "distance":"0.4km",
-                        "lottoInfos":[
-                          {"lottoType":"L645","place":1,"lottoJackpot":2300000000,"drwNum":1160}
-                        ]
-                      }
-                    ]
-                  }
-                }
-                """.utf8
+        case .getStore(let storeNo):
+            let store = makeMockStores(centerLat: mockDefaultLat, centerLot: mockDefaultLot)
+                .first { $0.storeNo == storeNo } ?? makeMockStores(centerLat: mockDefaultLat, centerLot: mockDefaultLot)[0]
+            return makeMockStoreListData(stores: [store], page: 1, size: 1, totalElements: 1)
+
+        case let .getStoreList(boundary, type, page, size, _, _, _):
+            let center = mockCenter(from: boundary)
+            let filteredStores = makeMockStores(centerLat: center.lat, centerLot: center.lot)
+                .filter { mockStore($0, supports: type) }
+            let safePage = max(page, 1)
+            let safeSize = max(size, 1)
+            let startIndex = (safePage - 1) * safeSize
+            let pagedStores = Array(filteredStores.dropFirst(startIndex).prefix(safeSize))
+
+            return makeMockStoreListData(
+                stores: pagedStores,
+                page: safePage,
+                size: safeSize,
+                totalElements: filteredStores.count
             )
-            
-        case .getStoreList:
-            return Data(
-                """
-                {
-                  "message":"Success",
-                  "code":200,
-                  "store_info":{
-                    "pageNum":1,
-                    "pageSize":10,
-                    "totalPages":1,
-                    "totalElements":3,
-                    "content":[
-                      {
-                        "storeNo":1001,
-                        "storeNm":"행운복권방",
-                        "storeTel":"02-111-2222",
-                        "storeAddr":"서울 강남구 테헤란로 100",
-                        "addrLot":127.0276,
-                        "addrLat":37.4979,
-                        "lottoTypeList":["L645","L720","S2000"],
-                        "distance":"0.4km",
-                        "lottoInfos":[
-                          {"lottoType":"L645","place":1,"lottoJackpot":2300000000,"drwNum":1160},
-                          {"lottoType":"L720","place":2,"lottoJackpot":1200000000,"drwNum":260}
-                        ]
-                      },
-                      {
-                        "storeNo":1002,
-                        "storeNm":"로또명당",
-                        "storeTel":"02-333-4444",
-                        "storeAddr":"서울 서초구 서초대로 220",
-                        "addrLot":127.0154,
-                        "addrLat":37.4918,
-                        "lottoTypeList":["L645","S1000"],
-                        "distance":"1.1km",
-                        "lottoInfos":[
-                          {"lottoType":"L645","place":2,"lottoJackpot":450000000,"drwNum":1158}
-                        ]
-                      },
-                      {
-                        "storeNo":1003,
-                        "storeNm":"복권천국",
-                        "storeTel":"02-555-6666",
-                        "storeAddr":"서울 송파구 송파대로 80",
-                        "addrLot":127.1051,
-                        "addrLat":37.5146,
-                        "lottoTypeList":["L720","S2000"],
-                        "distance":"2.3km",
-                        "lottoInfos":[
-                          {"lottoType":"L720","place":1,"lottoJackpot":2500000000,"drwNum":258}
-                        ]
-                      }
-                    ]
-                  }
-                }
-                """.utf8
-            )
-            
+
         case .toggleStoreLikeStatus, .checkStoreLikeStatus:
             return Data("{}".utf8)
         }
+    }
+}
+
+private let mockDefaultLat = 37.5664991184072
+private let mockDefaultLot = 126.968555570622
+
+private func mockCenter(from boundary: MapBoundary) -> (lat: Double, lot: Double) {
+    let lat = (boundary.leftLat + boundary.rightLat) / 2
+    let lot = (boundary.leftLot + boundary.rightLot) / 2
+
+    guard lat.isFinite, lot.isFinite, lat != 0, lot != 0 else {
+        return (mockDefaultLat, mockDefaultLot)
+    }
+
+    return (lat, lot)
+}
+
+private func makeMockStores(centerLat: Double, centerLot: Double) -> [StoreDetailInfo] {
+    return [
+        StoreDetailInfo(
+            storeNo: 1001,
+            storeNm: "행운복권",
+            storeTel: "02-111-2222",
+            storeAddr: "서울 중구 새문안로 16 인근",
+            addrLot: centerLot,
+            addrLat: centerLat,
+            lottoTypeList: ["L645", "L720", "S2000"],
+            distance: "0.1km",
+            lottoInfos: [
+                LottoInfo(lottoType: "L645", place: 1, lottoJackpot: 2_300_000_000, drwNum: 1160),
+                LottoInfo(lottoType: "L720", place: 2, lottoJackpot: 1_200_000_000, drwNum: 260)
+            ]
+        ),
+        StoreDetailInfo(
+            storeNo: 1002,
+            storeNm: "로또명당",
+            storeTel: "02-333-4444",
+            storeAddr: "서울 중구 세종대로 110 인근",
+            addrLot: centerLot + 0.0011,
+            addrLat: centerLat + 0.0007,
+            lottoTypeList: ["L645", "S1000"],
+            distance: "0.2km",
+            lottoInfos: [
+                LottoInfo(lottoType: "L645", place: 2, lottoJackpot: 450_000_000, drwNum: 1158)
+            ]
+        ),
+        StoreDetailInfo(
+            storeNo: 1003,
+            storeNm: "복권천국",
+            storeTel: "02-555-6666",
+            storeAddr: "서울 종로구 새문안로 92 인근",
+            addrLot: centerLot - 0.0010,
+            addrLat: centerLat - 0.0009,
+            lottoTypeList: ["L720", "S2000"],
+            distance: "0.2km",
+            lottoInfos: [
+                LottoInfo(lottoType: "L720", place: 1, lottoJackpot: 2_500_000_000, drwNum: 258)
+            ]
+        ),
+        StoreDetailInfo(
+            storeNo: 1004,
+            storeNm: "황금복권",
+            storeTel: "02-777-8888",
+            storeAddr: "서울 서대문구 통일로 135 인근",
+            addrLot: centerLot - 0.0004,
+            addrLat: centerLat + 0.0014,
+            lottoTypeList: ["L645", "L720"],
+            distance: "0.3km",
+            lottoInfos: [
+                LottoInfo(lottoType: "L645", place: 3, lottoJackpot: 15_000_000, drwNum: 1157),
+                LottoInfo(lottoType: "L720", place: 2, lottoJackpot: 100_000_000, drwNum: 257)
+            ]
+        ),
+        StoreDetailInfo(
+            storeNo: 1005,
+            storeNm: "드림티켓",
+            storeTel: "02-999-0000",
+            storeAddr: "서울 중구 정동길 21 인근",
+            addrLot: centerLot + 0.0015,
+            addrLat: centerLat - 0.0012,
+            lottoTypeList: ["S500", "S1000", "S2000"],
+            distance: "0.3km",
+            lottoInfos: [
+                LottoInfo(lottoType: "S2000", place: 1, lottoJackpot: 1_000_000_000, drwNum: 64)
+            ]
+        )
+    ]
+}
+
+private func mockStore(_ store: StoreDetailInfo, supports type: Int?) -> Bool {
+    guard let type, type != 0 else { return true }
+
+    let typeList = Set(store.lottoTypeList)
+
+    switch type {
+    case 1:
+        return typeList.contains("L645")
+    case 2:
+        return typeList.contains("L720")
+    case 3:
+        return typeList.contains { $0.hasPrefix("S") }
+    case 4:
+        return typeList.contains("L645") || typeList.contains("L720")
+    case 5:
+        return typeList.contains("L645") || typeList.contains { $0.hasPrefix("S") }
+    case 6:
+        return typeList.contains("L720") || typeList.contains { $0.hasPrefix("S") }
+    default:
+        return true
+    }
+}
+
+private func makeMockStoreListData(stores: [StoreDetailInfo], page: Int, size: Int, totalElements: Int) -> Data {
+    let totalPages = max(Int(ceil(Double(totalElements) / Double(size))), 1)
+    let response = StoreListResponse(
+        message: "Success",
+        code: 200,
+        storeInfo: StorePagingInfo(
+            pageNum: page,
+            pageSize: size,
+            totalPages: totalPages,
+            totalElements: totalElements,
+            content: stores
+        )
+    )
+
+    do {
+        return try JSONEncoder().encode(response)
+    } catch {
+        return Data("{}".utf8)
     }
 }
